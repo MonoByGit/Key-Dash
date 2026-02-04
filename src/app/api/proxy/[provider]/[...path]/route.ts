@@ -1,5 +1,4 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { auth } from '@/lib/auth';
 import { prisma } from '@/lib/prisma';
 import { decrypt } from '@/lib/encryption';
 import { calculateCost, extractTokenUsage } from '@/lib/pricing';
@@ -29,15 +28,6 @@ export async function POST(
     return NextResponse.json(
       { error: `Provider '${providerName}' is niet ondersteund` },
       { status: 400 }
-    );
-  }
-
-  // Check authentication
-  const session = await auth();
-  if (!session?.user?.id) {
-    return NextResponse.json(
-      { error: 'Niet geautoriseerd' },
-      { status: 401 }
     );
   }
 

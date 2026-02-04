@@ -1,7 +1,6 @@
 'use client';
 
 import { useState } from 'react';
-import { signIn } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import { KeyRound, Lock, Mail, ArrowRight, Loader2 } from 'lucide-react';
 
@@ -18,16 +17,18 @@ export default function LoginPage() {
     setLoading(true);
 
     try {
-      const result = await signIn('credentials', {
-        email,
-        password,
-        redirect: false,
+      const res = await fetch('/api/auth/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, password }),
       });
 
-      if (result?.error) {
-        setError('Ongeldige email of wachtwoord');
-      } else {
+      if (res.ok) {
         router.push('/');
+        router.refresh();
+      } else {
+        const data = await res.json();
+        setError(data.error || 'Ongeldige inloggegevens');
       }
     } catch (err) {
       setError('Er is een fout opgetreden');

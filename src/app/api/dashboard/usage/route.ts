@@ -1,13 +1,7 @@
 import { NextResponse } from 'next/server';
-import { auth } from '@/lib/auth';
 import { prisma } from '@/lib/prisma';
 
 export async function GET(request: Request) {
-  const session = await auth();
-  if (!session?.user?.id) {
-    return NextResponse.json({ error: 'Niet geautoriseerd' }, { status: 401 });
-  }
-
   const { searchParams } = new URL(request.url);
   const days = parseInt(searchParams.get('days') || '30');
   const providerId = searchParams.get('providerId');

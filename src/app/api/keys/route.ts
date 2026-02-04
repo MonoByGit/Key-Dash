@@ -1,14 +1,8 @@
 import { NextResponse } from 'next/server'
-import { auth } from '@/lib/auth'
 import { prisma } from '@/lib/prisma'
 import { encrypt } from '@/lib/encryption'
 
 export async function GET() {
-  const session = await auth()
-  if (!session?.user?.id) {
-    return NextResponse.json({ error: 'Niet geautoriseerd' }, { status: 401 })
-  }
-
   try {
     const keys = await prisma.apiKey.findMany({
       include: {
@@ -28,11 +22,6 @@ export async function GET() {
 }
 
 export async function POST(request: Request) {
-  const session = await auth()
-  if (!session?.user?.id) {
-    return NextResponse.json({ error: 'Niet geautoriseerd' }, { status: 401 })
-  }
-
   try {
     const body = await request.json()
 

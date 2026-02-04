@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { Plus, Trash2, Copy, Check, ChevronDown, ChevronUp, Activity, DollarSign, Key, Server, BarChart3, Globe, Cpu, Search } from 'lucide-react'
+import { Plus, Trash2, Copy, Check, ChevronDown, ChevronUp, Activity, DollarSign, Key, Server, BarChart3, Globe, Cpu, Search, LogOut } from 'lucide-react'
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, BarChart, Bar, Legend } from 'recharts'
 
 // Cloud icon component
@@ -141,7 +141,7 @@ export default function Dashboard() {
   const [copiedKeyId, setCopiedKeyId] = useState<string | null>(null)
   const [expandedProviders, setExpandedProviders] = useState<Set<string>>(new Set())
   const [chartPeriod, setChartPeriod] = useState<'day' | 'week' | 'month'>('month')
-  const [useMockData, setUseMockData] = useState(true)
+  const [useMockData, setUseMockData] = useState(false)
 
   // New key form state
   const [newKey, useNewKey] = useState<NewKeyData>({
@@ -286,6 +286,12 @@ export default function Dashboard() {
       color: CHART_COLORS[idx % CHART_COLORS.length],
     }
   })
+
+  // Logout
+  const handleLogout = async () => {
+    await fetch('/api/auth/logout', { method: 'POST' })
+    window.location.href = '/login'
+  }
 
   // Add key
   const handleAddKey = async (e: React.FormEvent) => {
@@ -444,6 +450,15 @@ export default function Dashboard() {
             </div>
 
             <div className="flex items-center gap-4">
+              {/* Logout Button */}
+              <button
+                onClick={handleLogout}
+                className="flex items-center gap-1.5 px-3 py-1.5 text-[#98989d] hover:text-[#f5f5f7] hover:bg-[#3a3a3c] rounded-lg transition-colors"
+                title="Uitloggen"
+              >
+                <LogOut className="w-4 h-4" />
+              </button>
+
               {/* Mock Data Toggle */}
               <div className="flex items-center gap-2">
                 <span className={`text-xs ${useMockData ? 'text-[#98989d]' : 'text-[#6e6e73]'}`}>Data</span>
@@ -662,7 +677,7 @@ export default function Dashboard() {
                       ) : (
                         <button
                           onClick={() => {
-                            setNewKey({ name: '', label: '', key: '', providerId: provider.id })
+                            useNewKey({ name: '', label: '', key: '', providerId: provider.id })
                             setShowAddKeyModal(true)
                           }}
                           className="w-full mt-1 py-2 px-3 bg-[#48484a] hover:bg-[#555557] text-[#f5f5f7] text-xs font-medium rounded-md transition-colors flex items-center justify-center gap-1"
