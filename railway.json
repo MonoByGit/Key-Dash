@@ -5,7 +5,7 @@
     "builder": "NIXPACKS"
   },
   "deploy": {
-    "startCommand": "AUTH_TRUST_HOST=true npx prisma generate && npx prisma db push && npm start",
+    "startCommand": "NEXTAUTH_TRUST_HOST=true npx prisma generate && npx prisma db push && npm start",
     "healthcheckPath": "/api/health",
     "restartPolicyType": "ON_FAILURE",
     "restartPolicyMaxRetries": 3
