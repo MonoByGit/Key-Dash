@@ -286,10 +286,11 @@ export default function Dashboard() {
   const providerComparison = providers.map((provider, idx) => {
     const providerKeys = apiKeys.filter((k) => k.providerId === provider.id)
     const cost = providerKeys.reduce((sum, k) => sum + k.cost, 0)
+    const tokens = providerKeys.reduce((sum, k) => sum + k.inputTokens + k.outputTokens, 0)
     return {
       name: provider.displayName,
-      cost: Number(cost.toFixed(2)),
-      tokens: providerKeys.reduce((sum, k) => sum + k.inputTokens + k.outputTokens, 0),
+      cost: Math.round(cost),
+      tokens: Math.round(tokens / 1000),
       color: CHART_COLORS[idx % CHART_COLORS.length],
     }
   })
@@ -644,11 +645,11 @@ export default function Dashboard() {
                     <h2 className="text-[13px] font-medium text-[#f5f5f7]">Kosten per Provider</h2>
                   </div>
                   <div className="p-5">
-                    <ResponsiveContainer width="100%" height={240}>
-                      <BarChart data={providerComparison} layout="vertical">
+                    <ResponsiveContainer width="100%" height={280}>
+                      <BarChart data={providerComparison} layout="vertical" barSize={24}>
                         <CartesianGrid strokeDasharray="3 3" stroke="#38383a" horizontal={false} />
                         <XAxis type="number" stroke="#6e6e73" fontSize={12} tickLine={false} axisLine={false} />
-                        <YAxis type="category" dataKey="name" stroke="#98989d" fontSize={13} width={100} tickLine={false} axisLine={false} />
+                        <YAxis type="category" dataKey="name" stroke="#98989d" fontSize={13} width={120} tickLine={false} axisLine={false} />
                         <Tooltip contentStyle={{ backgroundColor: '#2c2c2e', border: '1px solid #38383a', borderRadius: '8px' }} />
                         {providerComparison.map((item, idx) => (
                           <Bar
@@ -671,11 +672,11 @@ export default function Dashboard() {
                     <h2 className="text-[13px] font-medium text-[#f5f5f7]">Tokens per Provider</h2>
                   </div>
                   <div className="p-5">
-                    <ResponsiveContainer width="100%" height={240}>
-                      <BarChart data={providerComparison} layout="vertical">
+                    <ResponsiveContainer width="100%" height={280}>
+                      <BarChart data={providerComparison} layout="vertical" barSize={24}>
                         <CartesianGrid strokeDasharray="3 3" stroke="#38383a" horizontal={false} />
                         <XAxis type="number" stroke="#6e6e73" fontSize={12} tickLine={false} axisLine={false} />
-                        <YAxis type="category" dataKey="name" stroke="#98989d" fontSize={13} width={100} tickLine={false} axisLine={false} />
+                        <YAxis type="category" dataKey="name" stroke="#98989d" fontSize={13} width={120} tickLine={false} axisLine={false} />
                         <Tooltip contentStyle={{ backgroundColor: '#2c2c2e', border: '1px solid #38383a', borderRadius: '8px' }} />
                         {providerComparison.map((item, idx) => (
                           <Bar
