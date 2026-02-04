@@ -117,10 +117,12 @@ function generateMockHistory() {
       const providerData: Record<string, number> = {}
 
       MOCK_PROVIDERS.forEach((provider, idx) => {
-        const baseDaily = (idx + 1) * 15 + Math.random() * 20
-        const monthMultiplier = 1 + (monthIdx * 0.15)
-        const dayVariation = Math.sin(d * 0.3 + idx * 0.5) * baseDaily * 0.3
-        providerData[provider.name] = Math.round((baseDaily * monthMultiplier + dayVariation) * 100) / 100
+        // Each provider gets a distinct "lane" - spread out from top to bottom
+        const laneHeight = 100 // Gap between each provider's lane
+        const baseValue = (MOCK_PROVIDERS.length - idx) * laneHeight // Provider 0 = top lane
+        const dayVariation = Math.sin(d * 0.3 + idx * 0.5) * 15
+        const monthMultiplier = 1 + (monthIdx * 0.1)
+        providerData[provider.name] = Math.round((baseValue * monthMultiplier + dayVariation))
       })
 
       data.push({ date: dateStr, ...providerData })
@@ -227,11 +229,12 @@ export default function Dashboard() {
   const generateChartData = () => {
     if (useMockData) {
       if (chartPeriod === 'day') {
-        // Last 24 hours of current month
+        // Last 24 hours of current month - spread providers vertically
         const currentMonth = MOCK_CHART_DATA.slice(-24)
+        const scaleFactor = 0.2 // Scale down for day view but keep spread
         return currentMonth.map((d, idx) => ({
           date: `${idx}:00`,
-          ...Object.fromEntries(Object.entries(d).filter(([k]) => k !== 'date').map(([k, v]) => [k, Number(v) / 5]))
+          ...Object.fromEntries(Object.entries(d).filter(([k]) => k !== 'date').map(([k, v]) => [k, Math.round(Number(v) * scaleFactor)]))
         }))
       } else if (chartPeriod === 'week') {
         // Last 7 days
@@ -271,9 +274,11 @@ export default function Dashboard() {
       providers.forEach((provider, idx) => {
         const providerKeys = apiKeys.filter((k) => k.providerId === provider.id)
         const providerCost = providerKeys.reduce((sum, k) => sum + k.cost, 0)
-        const baseCost = providerCost / 30
-        const variation = Math.sin(dayIndex * 0.5 + idx) * baseCost * 0.3
-        providerData[provider.name] = Math.max(0, Number((baseCost + variation).toFixed(2)))
+        // Each provider gets a distinct lane based on their total cost
+        const laneHeight = providerCost > 0 ? providerCost / 5 : 10
+        const baseValue = (providers.length - idx) * laneHeight
+        const variation = Math.sin(dayIndex * 0.5 + idx) * (laneHeight * 0.2)
+        providerData[provider.name] = Math.max(0, Number((baseValue + variation).toFixed(2)))
       })
       data.push({ date: dateStr, ...providerData })
     }
