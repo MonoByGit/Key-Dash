@@ -83,26 +83,26 @@ const MOCK_PROVIDERS = [
 
 const MOCK_KEYS = [
   // Anthropic - 3 keys
-  { id: 'k1', name: 'Production Claude', label: 'Main production', providerId: 'mock-1', requests: 4589, inputTokens: 89400, outputTokens: 125600, cost: 245.68, lastUsedAt: '2026-02-03T18:30:00Z', isActive: true },
-  { id: 'k2', name: 'Development', label: 'Staging env', providerId: 'mock-1', requests: 1245, inputTokens: 23400, outputTokens: 34500, cost: 56.75, lastUsedAt: '2026-02-03T17:45:00Z', isActive: true },
-  { id: 'k3', name: 'Personal Account', label: 'Experiments', providerId: 'mock-1', requests: 345, inputTokens: 8900, outputTokens: 12300, cost: 23.45, lastUsedAt: '2026-02-02T14:20:00Z', isActive: true },
+  { id: 'k1', name: 'Production Claude', label: 'Main production', providerId: 'mock-1', requests: 4589, inputTokens: 89400, outputTokens: 125600, cost: 245.68, lastUsedAt: '2026-02-03T18:30:00Z', isActive: true, archivedAt: null },
+  { id: 'k2', name: 'Development', label: 'Staging env', providerId: 'mock-1', requests: 1245, inputTokens: 23400, outputTokens: 34500, cost: 56.75, lastUsedAt: '2026-02-03T17:45:00Z', isActive: true, archivedAt: null },
+  { id: 'k3', name: 'Personal Account', label: 'Experiments', providerId: 'mock-1', requests: 345, inputTokens: 8900, outputTokens: 12300, cost: 23.45, lastUsedAt: '2026-02-02T14:20:00Z', isActive: true, archivedAt: null },
   // OpenAI - 4 keys
-  { id: 'k4', name: 'GPT-4o Production', label: 'Main API', providerId: 'mock-2', requests: 12845, inputTokens: 45600, outputTokens: 67800, cost: 123.45, lastUsedAt: '2026-02-03T18:55:00Z', isActive: true },
-  { id: 'k5', name: 'GPT-4o-mini', label: 'Fast responses', providerId: 'mock-2', requests: 34567, inputTokens: 23400, outputTokens: 45600, cost: 45.68, lastUsedAt: '2026-02-03T18:58:00Z', isActive: true },
-  { id: 'k6', name: 'Embeddings', label: 'Text embeddings', providerId: 'mock-2', requests: 6789, inputTokens: 123000, outputTokens: 0, cost: 61.50, lastUsedAt: '2026-02-03T16:30:00Z', isActive: true },
-  { id: 'k7', name: 'Old GPT-4', label: 'Legacy', providerId: 'mock-2', requests: 1234, inputTokens: 4500, outputTokens: 8900, cost: 23.45, lastUsedAt: '2026-01-28T12:00:00Z', isActive: true },
+  { id: 'k4', name: 'GPT-4o Production', label: 'Main API', providerId: 'mock-2', requests: 12845, inputTokens: 45600, outputTokens: 67800, cost: 123.45, lastUsedAt: '2026-02-03T18:55:00Z', isActive: true, archivedAt: null },
+  { id: 'k5', name: 'GPT-4o-mini', label: 'Fast responses', providerId: 'mock-2', requests: 34567, inputTokens: 23400, outputTokens: 45600, cost: 45.68, lastUsedAt: '2026-02-03T18:58:00Z', isActive: true, archivedAt: null },
+  { id: 'k6', name: 'Embeddings', label: 'Text embeddings', providerId: 'mock-2', requests: 6789, inputTokens: 123000, outputTokens: 0, cost: 61.50, lastUsedAt: '2026-02-03T16:30:00Z', isActive: true, archivedAt: null },
+  { id: 'k7', name: 'Old GPT-4', label: 'Legacy', providerId: 'mock-2', requests: 1234, inputTokens: 4500, outputTokens: 8900, cost: 23.45, lastUsedAt: '2026-01-28T12:00:00Z', isActive: true, archivedAt: null },
   // DeepSeek - 2 keys
-  { id: 'k8', name: 'DeepSeek Chat', label: 'Cost effective', providerId: 'mock-3', requests: 8923, inputTokens: 23400, outputTokens: 56700, cost: 14.57, lastUsedAt: '2026-02-03T18:45:00Z', isActive: true },
-  { id: 'k9', name: 'DeepSeek Coder', label: 'Code assistance', providerId: 'mock-3', requests: 3456, inputTokens: 8900, outputTokens: 23400, cost: 6.79, lastUsedAt: '2026-02-03T17:30:00Z', isActive: true },
+  { id: 'k8', name: 'DeepSeek Chat', label: 'Cost effective', providerId: 'mock-3', requests: 8923, inputTokens: 23400, outputTokens: 56700, cost: 14.57, lastUsedAt: '2026-02-03T18:45:00Z', isActive: true, archivedAt: null },
+  { id: 'k9', name: 'DeepSeek Coder', label: 'Code assistance', providerId: 'mock-3', requests: 3456, inputTokens: 8900, outputTokens: 23400, cost: 6.79, lastUsedAt: '2026-02-03T17:30:00Z', isActive: true, archivedAt: null },
   // Minimax - 2 keys
-  { id: 'k10', name: 'Minimax Chat', label: 'Chinese support', providerId: 'mock-4', requests: 4567, inputTokens: 12300, outputTokens: 34500, cost: 23.45, lastUsedAt: '2026-02-03T18:00:00Z', isActive: true },
-  { id: 'k11', name: 'Minimax Video', label: 'Video generation', providerId: 'mock-4', requests: 234, inputTokens: 1200, outputTokens: 0, cost: 8.93, lastUsedAt: '2026-02-03T15:00:00Z', isActive: true },
+  { id: 'k10', name: 'Minimax Chat', label: 'Chinese support', providerId: 'mock-4', requests: 4567, inputTokens: 12300, outputTokens: 34500, cost: 23.45, lastUsedAt: '2026-02-03T18:00:00Z', isActive: true, archivedAt: null },
+  { id: 'k11', name: 'Minimax Video', label: 'Video generation', providerId: 'mock-4', requests: 234, inputTokens: 1200, outputTokens: 0, cost: 8.93, lastUsedAt: '2026-02-03T15:00:00Z', isActive: true, archivedAt: null },
   // Google - 2 keys
-  { id: 'k12', name: 'Gemini Pro', label: 'Multimodal', providerId: 'mock-5', requests: 3456, inputTokens: 8900, outputTokens: 23400, cost: 17.85, lastUsedAt: '2026-02-03T18:30:00Z', isActive: true },
-  { id: 'k13', name: 'Gemini Flash', label: 'Fast & cheap', providerId: 'mock-5', requests: 12345, inputTokens: 45600, outputTokens: 12300, cost: 28.95, lastUsedAt: '2026-02-03T18:59:00Z', isActive: true },
+  { id: 'k12', name: 'Gemini Pro', label: 'Multimodal', providerId: 'mock-5', requests: 3456, inputTokens: 8900, outputTokens: 23400, cost: 17.85, lastUsedAt: '2026-02-03T18:30:00Z', isActive: true, archivedAt: null },
+  { id: 'k13', name: 'Gemini Flash', label: 'Fast & cheap', providerId: 'mock-5', requests: 12345, inputTokens: 45600, outputTokens: 12300, cost: 28.95, lastUsedAt: '2026-02-03T18:59:00Z', isActive: true, archivedAt: null },
   // Azure - 2 keys
-  { id: 'k14', name: 'Azure GPT-4', label: 'Enterprise', providerId: 'mock-6', requests: 2345, inputTokens: 6700, outputTokens: 15600, cost: 56.79, lastUsedAt: '2026-02-03T18:20:00Z', isActive: true },
-  { id: 'k15', name: 'Azure Embeddings', label: 'Vector store', providerId: 'mock-6', requests: 8901, inputTokens: 89000, outputTokens: 0, cost: 66.75, lastUsedAt: '2026-02-03T18:50:00Z', isActive: true },
+  { id: 'k14', name: 'Azure GPT-4', label: 'Enterprise', providerId: 'mock-6', requests: 2345, inputTokens: 6700, outputTokens: 15600, cost: 56.79, lastUsedAt: '2026-02-03T18:20:00Z', isActive: true, archivedAt: null },
+  { id: 'k15', name: 'Azure Embeddings', label: 'Vector store', providerId: 'mock-6', requests: 8901, inputTokens: 89000, outputTokens: 0, cost: 66.75, lastUsedAt: '2026-02-03T18:50:00Z', isActive: true, archivedAt: null },
 ]
 
 // Generate 6 months of daily data for charts
