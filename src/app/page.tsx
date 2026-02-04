@@ -68,8 +68,8 @@ const PROVIDER_ICONS: Record<string, React.ReactNode> = {
   azure: <Cloud className="w-5 h-5" />,
 }
 
-// Chart colors - vibrant, distinct colors for dark theme
-const CHART_COLORS = ['#64d2ff', '#bf5af2', '#ff9f0a', '#ff453a', '#30d158', '#ffcc00']
+// Chart colors - subtle cyberpunk neon for dark theme
+const CHART_COLORS = ['#5e9eff', '#a855f7', '#22c55e', '#f97316', '#ec4899', '#06b6d4']
 
 // Mock data for 6 providers with multiple keys each
 const MOCK_PROVIDERS = [
@@ -650,7 +650,7 @@ export default function Dashboard() {
                         <XAxis type="number" stroke="#6e6e73" fontSize={12} tickLine={false} axisLine={false} />
                         <YAxis type="category" dataKey="name" stroke="#98989d" fontSize={13} width={100} tickLine={false} axisLine={false} />
                         <Tooltip contentStyle={{ backgroundColor: '#2c2c2e', border: '1px solid #38383a', borderRadius: '8px' }} />
-                        <Bar dataKey="cost" fill="#707070" radius={4} />
+                        <Bar dataKey="cost" fill="#5e9eff" radius={4} />
                       </BarChart>
                     </ResponsiveContainer>
                   </div>
@@ -668,7 +668,7 @@ export default function Dashboard() {
                         <XAxis type="number" stroke="#6e6e73" fontSize={12} tickLine={false} axisLine={false} />
                         <YAxis type="category" dataKey="name" stroke="#98989d" fontSize={13} width={100} tickLine={false} axisLine={false} />
                         <Tooltip contentStyle={{ backgroundColor: '#2c2c2e', border: '1px solid #38383a', borderRadius: '8px' }} />
-                        <Bar dataKey="tokens" fill="#808080" radius={4} />
+                        <Bar dataKey="tokens" fill="#22c55e" radius={4} />
                       </BarChart>
                     </ResponsiveContainer>
                   </div>
