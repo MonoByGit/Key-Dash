@@ -117,11 +117,12 @@ function generateMockHistory() {
       const providerData: Record<string, number> = {}
 
       MOCK_PROVIDERS.forEach((provider, idx) => {
-        // Each provider gets a distinct "lane" - spread out from top to bottom
-        const laneHeight = 100 // Gap between each provider's lane
-        const baseValue = (MOCK_PROVIDERS.length - idx) * laneHeight // Provider 0 = top lane
-        const dayVariation = Math.sin(d * 0.3 + idx * 0.5) * 15
-        const monthMultiplier = 1 + (monthIdx * 0.1)
+        // Each provider gets a distinct "lane" - spread out significantly from top to bottom
+        // Provider 0 (Anthropic) at top (~3000), Provider 5 (Azure) at bottom (~500)
+        const laneHeight = 500 // Large gap between lanes for clear visual separation
+        const baseValue = (MOCK_PROVIDERS.length - idx) * laneHeight
+        const dayVariation = Math.sin(d * 0.3 + idx * 0.5) * (laneHeight * 0.15)
+        const monthMultiplier = 1 + (monthIdx * 0.08)
         providerData[provider.name] = Math.round((baseValue * monthMultiplier + dayVariation))
       })
 
@@ -229,9 +230,9 @@ export default function Dashboard() {
   const generateChartData = () => {
     if (useMockData) {
       if (chartPeriod === 'day') {
-        // Last 24 hours of current month - spread providers vertically
+        // Last 24 hours - maintain vertical spread between providers
         const currentMonth = MOCK_CHART_DATA.slice(-24)
-        const scaleFactor = 0.2 // Scale down for day view but keep spread
+        const scaleFactor = 0.4 // Scale down but maintain the lane separation
         return currentMonth.map((d, idx) => ({
           date: `${idx}:00`,
           ...Object.fromEntries(Object.entries(d).filter(([k]) => k !== 'date').map(([k, v]) => [k, Math.round(Number(v) * scaleFactor)]))
@@ -274,10 +275,10 @@ export default function Dashboard() {
       providers.forEach((provider, idx) => {
         const providerKeys = apiKeys.filter((k) => k.providerId === provider.id)
         const providerCost = providerKeys.reduce((sum, k) => sum + k.cost, 0)
-        // Each provider gets a distinct lane based on their total cost
-        const laneHeight = providerCost > 0 ? providerCost / 5 : 10
+        // Each provider gets a distinct lane with minimum 200 unit gap
+        const laneHeight = Math.max(200, providerCost > 0 ? providerCost / 3 : 200)
         const baseValue = (providers.length - idx) * laneHeight
-        const variation = Math.sin(dayIndex * 0.5 + idx) * (laneHeight * 0.2)
+        const variation = Math.sin(dayIndex * 0.5 + idx) * (laneHeight * 0.15)
         providerData[provider.name] = Math.max(0, Number((baseValue + variation).toFixed(2)))
       })
       data.push({ date: dateStr, ...providerData })
