@@ -654,17 +654,22 @@ export default function Dashboard() {
                     <h2 className="text-[13px] font-medium text-[#f5f5f7]">Kosten per Provider</h2>
                   </div>
                   <div className="p-5">
-                    <ResponsiveContainer width="100%" height={280}>
-                      <BarChart data={providerComparison} layout="vertical" barSize={32}>
+                    <ResponsiveContainer width="100%" height={240}>
+                      <BarChart data={providerComparison} layout="vertical" barSize={20}>
                         <CartesianGrid strokeDasharray="3 3" stroke="#38383a" horizontal={false} />
                         <XAxis type="number" stroke="#6e6e73" fontSize={12} tickLine={false} axisLine={false} />
                         <YAxis type="category" dataKey="name" stroke="#98989d" fontSize={13} width={100} tickLine={false} axisLine={false} />
                         <Tooltip contentStyle={{ backgroundColor: '#2c2c2e', border: '1px solid #38383a', borderRadius: '8px' }} />
-                        <Bar dataKey="cost" radius={4}>
-                          {providerComparison.map((entry, index) => (
-                            <cell key={`cell-${index}`} fill={CHART_COLORS[index % CHART_COLORS.length]} />
-                          ))}
-                        </Bar>
+                        {providerComparison.map((item, idx) => (
+                          <Bar
+                            key={item.name}
+                            dataKey="cost"
+                            fill={CHART_COLORS[idx % CHART_COLORS.length]}
+                            fillOpacity={0.8}
+                            radius={4}
+                            data={[item]}
+                          />
+                        ))}
                       </BarChart>
                     </ResponsiveContainer>
                   </div>
@@ -676,17 +681,22 @@ export default function Dashboard() {
                     <h2 className="text-[13px] font-medium text-[#f5f5f7]">Tokens per Provider</h2>
                   </div>
                   <div className="p-5">
-                    <ResponsiveContainer width="100%" height={280}>
-                      <BarChart data={providerComparison} layout="vertical" barSize={32}>
+                    <ResponsiveContainer width="100%" height={240}>
+                      <BarChart data={providerComparison} layout="vertical" barSize={20}>
                         <CartesianGrid strokeDasharray="3 3" stroke="#38383a" horizontal={false} />
                         <XAxis type="number" stroke="#6e6e73" fontSize={12} tickLine={false} axisLine={false} />
                         <YAxis type="category" dataKey="name" stroke="#98989d" fontSize={13} width={100} tickLine={false} axisLine={false} />
                         <Tooltip contentStyle={{ backgroundColor: '#2c2c2e', border: '1px solid #38383a', borderRadius: '8px' }} />
-                        <Bar dataKey="tokens" radius={4}>
-                          {providerComparison.map((entry, index) => (
-                            <cell key={`cell-${index}`} fill={CHART_COLORS[index % CHART_COLORS.length]} />
-                          ))}
-                        </Bar>
+                        {providerComparison.map((item, idx) => (
+                          <Bar
+                            key={item.name}
+                            dataKey="tokens"
+                            fill={CHART_COLORS[idx % CHART_COLORS.length]}
+                            fillOpacity={0.8}
+                            radius={4}
+                            data={[item]}
+                          />
+                        ))}
                       </BarChart>
                     </ResponsiveContainer>
                   </div>
