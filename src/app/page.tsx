@@ -613,11 +613,11 @@ export default function Dashboard() {
                 </div>
               </div>
               <div className="p-5">
-                <ResponsiveContainer width="100%" height={280}>
+                <ResponsiveContainer width="100%" height={320}>
                   <AreaChart data={chartData}>
                     <CartesianGrid strokeDasharray="3 3" stroke="#38383a" />
                     <XAxis dataKey="date" stroke="#6e6e73" fontSize={12} tickLine={false} axisLine={false} />
-                    <YAxis stroke="#6e6e73" fontSize={12} tickLine={false} axisLine={false} />
+                    <YAxis stroke="#6e6e73" fontSize={12} tickLine={false} axisLine={false} domain={[0, 'auto']} />
                     <Tooltip
                       contentStyle={{
                         backgroundColor: '#2c2c2e',
