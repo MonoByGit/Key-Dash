@@ -480,47 +480,31 @@ export default function Dashboard() {
     <div className="min-h-screen bg-black text-[#f5f5f7]">
       {/* Header */}
       <header className="border-b border-[#38383a] bg-[#2c2c2e]/90 backdrop-blur-xl sticky top-0 z-10">
-        <div className="max-w-7xl mx-auto px-5 py-3">
-          <div className="flex items-center justify-between">
+        <div className="max-w-7xl mx-auto px-4 py-3">
+          {/* Top row: Logo + Actions */}
+          <div className="flex items-center justify-between mb-3">
             {/* Logo - Left */}
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-2">
               <div className="p-1.5 bg-[#48484a] rounded-lg">
                 <Activity className="w-5 h-5 text-[#98989d]" />
               </div>
-              <h1 className="text-[17px] font-medium text-[#f5f5f7]">AI API Dashboard</h1>
-            </div>
-
-            {/* Tabs - Center */}
-            <div className="flex bg-[#3a3a3c] rounded-lg p-0.5">
-              {['overview', 'keys', 'providers', 'archive'].map((tab) => (
-                <button
-                  key={tab}
-                  onClick={() => setActiveTab(tab as typeof activeTab)}
-                  className={`px-4 py-1.5 text-[13px] font-medium transition-all duration-200 rounded-md ${
-                    activeTab === tab
-                      ? 'bg-[#48484a] text-[#f5f5f7] shadow-sm'
-                      : 'text-[#98989d] hover:text-[#f5f5f7]'
-                  }`}
-                >
-                  {tab === 'overview' ? 'Overzicht' : tab === 'keys' ? 'Sleutels' : tab === 'providers' ? 'Aanbieders' : 'Archief'}
-                </button>
-              ))}
+              <h1 className="text-[15px] font-medium text-[#f5f5f7]">AI API Dashboard</h1>
             </div>
 
             {/* Right Actions */}
-            <div className="flex items-center gap-4">
+            <div className="flex items-center gap-3">
               {/* Mock Data Toggle */}
-              <div className="flex items-center gap-2">
-                <span className={`text-xs ${useMockData ? 'text-[#98989d]' : 'text-[#6e6e73]'}`}>Data</span>
+              <div className="flex items-center gap-1.5">
+                <span className={`text-xs hidden sm:inline ${useMockData ? 'text-[#98989d]' : 'text-[#6e6e73]'}`}>Data</span>
                 <button
                   onClick={() => setUseMockData(!useMockData)}
-                  className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
+                  className={`relative inline-flex h-5 w-9 items-center rounded-full transition-colors ${
                     useMockData ? 'bg-[#48484a]' : 'bg-[#3a3a3c]'
                   }`}
                 >
                   <span
-                    className={`inline-block h-4 w-4 transform rounded-full bg-[#98989d] transition-transform ${
-                      useMockData ? 'translate-x-6' : 'translate-x-1'
+                    className={`inline-block h-3.5 w-3.5 transform rounded-full bg-[#98989d] transition-transform ${
+                      useMockData ? 'translate-x-5' : 'translate-x-1'
                     }`}
                   />
                 </button>
@@ -529,17 +513,34 @@ export default function Dashboard() {
               {/* Logout Button */}
               <button
                 onClick={handleLogout}
-                className="flex items-center gap-1.5 px-3 py-1.5 text-[#98989d] hover:text-[#f5f5f7] hover:bg-[#3a3a3c] rounded-lg transition-colors"
+                className="flex items-center gap-1 px-2 py-1.5 text-[#98989d] hover:text-[#f5f5f7] hover:bg-[#3a3a3c] rounded-lg transition-colors"
                 title="Uitloggen"
               >
                 <LogOut className="w-4 h-4" />
               </button>
             </div>
           </div>
+
+          {/* Tabs - Scrollable on mobile */}
+          <div className="flex bg-[#3a3a3c] rounded-lg p-0.5 overflow-x-auto scrollbar-hide">
+            {['overview', 'keys', 'providers', 'archive'].map((tab) => (
+              <button
+                key={tab}
+                onClick={() => setActiveTab(tab as typeof activeTab)}
+                className={`px-4 py-1.5 text-[13px] font-medium transition-all duration-200 rounded-md whitespace-nowrap ${
+                  activeTab === tab
+                    ? 'bg-[#48484a] text-[#f5f5f7] shadow-sm'
+                    : 'text-[#98989d] hover:text-[#f5f5f7]'
+                }`}
+              >
+                {tab === 'overview' ? 'Overzicht' : tab === 'keys' ? 'Sleutels' : tab === 'providers' ? 'Aanbieders' : 'Archief'}
+              </button>
+            ))}
+          </div>
         </div>
       </header>
 
-      <main className="max-w-7xl mx-auto px-5 py-6">
+      <main className="max-w-7xl mx-auto px-4 py-4 sm:px-5 sm:py-6">
         {/* Stats Cards */}
         {activeTab === 'overview' && (
           <>
@@ -1035,6 +1036,7 @@ export default function Dashboard() {
               </div>
             ) : (
               <div className="bg-[#2c2c2e] border border-[#38383a] rounded-xl overflow-hidden">
+                <div className="overflow-x-auto">
                 <table className="w-full">
                   <thead className="bg-[#1a1a25]">
                     <tr>
@@ -1078,6 +1080,7 @@ export default function Dashboard() {
                     ))}
                   </tbody>
                 </table>
+                </div>
               </div>
             )}
           </div>
@@ -1086,7 +1089,7 @@ export default function Dashboard() {
 
       {/* Add Key Modal */}
       {showAddKeyModal && (
-        <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50">
+        <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50 p-4">
           <div className="bg-[#2c2c2e] border border-[#38383a] w-full max-w-md rounded-xl">
             <div className="px-5 py-3 border-b border-[#38383a]">
               <h2 className="text-[15px] font-medium text-[#f5f5f7]">Nieuwe API Key</h2>
@@ -1157,7 +1160,7 @@ export default function Dashboard() {
 
       {/* Add Provider Modal */}
       {showAddProviderModal && (
-        <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50">
+        <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50 p-4">
           <div className="bg-[#2c2c2e] border border-[#38383a] w-full max-w-md rounded-xl">
             <div className="px-5 py-3 border-b border-[#38383a]">
               <h2 className="text-[15px] font-medium text-[#f5f5f7]">Aanbieder Toevoegen</h2>
