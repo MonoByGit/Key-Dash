@@ -13,16 +13,20 @@
     "db:seed": "npx tsx prisma/seed.ts"
   },
   "dependencies": {
+    "@auth/prisma-adapter": "^2.11.1",
+    "@prisma/client": "^5.7.1",
+    "bcryptjs": "^3.0.3",
+    "clsx": "^2.0.0",
+    "crypto-js": "^4.2.0",
+    "lucide-react": "^0.294.0",
     "next": "14.0.4",
+    "next-auth": "^5.0.0-beta.30",
     "react": "^18",
     "react-dom": "^18",
-    "@prisma/client": "^5.7.1",
-    "recharts": "^2.10.3",
-    "lucide-react": "^0.294.0",
-    "clsx": "^2.0.0",
-    "crypto-js": "^4.2.0"
+    "recharts": "^2.10.3"
   },
   "devDependencies": {
+    "@types/bcryptjs": "^2.4.6",
     "@types/crypto-js": "^4.2.1",
     "@types/node": "^20",
     "@types/react": "^18",

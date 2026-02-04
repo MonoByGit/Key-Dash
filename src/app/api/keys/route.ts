@@ -1,8 +1,14 @@
 import { NextResponse } from 'next/server'
+import { auth } from '@/lib/auth'
 import { prisma } from '@/lib/prisma'
 import { encrypt } from '@/lib/encryption'
 
 export async function GET() {
+  const session = await auth()
+  if (!session?.user?.id) {
+    return NextResponse.json({ error: 'Niet geautoriseerd' }, { status: 401 })
+  }
+
   try {
     const keys = await prisma.apiKey.findMany({
       include: {
@@ -11,7 +17,10 @@ export async function GET() {
       orderBy: { createdAt: 'desc' },
     })
 
-    return NextResponse.json(keys)
+    // Don't return encrypted keys in list
+    const safeKeys = keys.map(({ key, ...rest }) => rest)
+
+    return NextResponse.json(safeKeys)
   } catch (error) {
     console.error('Error fetching keys:', error)
     return NextResponse.json({ error: 'Failed to fetch keys' }, { status: 500 })
@@ -19,6 +28,11 @@ export async function GET() {
 }
 
 export async function POST(request: Request) {
+  const session = await auth()
+  if (!session?.user?.id) {
+    return NextResponse.json({ error: 'Niet geautoriseerd' }, { status: 401 })
+  }
+
   try {
     const body = await request.json()
 
@@ -31,13 +45,17 @@ export async function POST(request: Request) {
         label: body.label || null,
         key: encryptedKey,
         providerId: body.providerId,
+        rateLimit: body.rateLimit || null,
+        isActive: true,
       },
       include: {
         provider: true,
       },
     })
 
-    return NextResponse.json(apiKey)
+    // Don't return encrypted key
+    const { key, ...safeKey } = apiKey
+    return NextResponse.json(safeKey)
   } catch (error) {
     console.error('Error creating key:', error)
     return NextResponse.json({ error: 'Failed to create key' }, { status: 500 })

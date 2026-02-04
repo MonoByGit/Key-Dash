@@ -4,6 +4,15 @@ import { useState, useEffect } from 'react'
 import { Plus, Trash2, Copy, Check, ChevronDown, ChevronUp, Activity, DollarSign, Key, Server, BarChart3, Globe, Cpu, Search } from 'lucide-react'
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, BarChart, Bar, Legend } from 'recharts'
 
+// Cloud icon component
+function Cloud({ className }: { className?: string }) {
+  return (
+    <svg className={className} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+      <path strokeLinecap="round" strokeLinejoin="round" d="M3 15a4 4 0 004 4h9a5 5 0 10-.1-9.999 5.002 5.002 0 10-9.78 2.096A4.001 4.001 0 003 15z" />
+    </svg>
+  )
+}
+
 // Types
 interface Provider {
   id: string
@@ -1027,14 +1036,5 @@ export default function Dashboard() {
         </div>
       )}
     </div>
-  )
-}
-
-// Cloud icon component
-function Cloud({ className }: { className?: string }) {
-  return (
-    <svg className={className} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-      <path strokeLinecap="round" strokeLinejoin="round" d="M3 15a4 4 0 004 4h9a5 5 0 10-.1-9.999 5.002 5.002 0 10-9.78 2.096A4.001 4.001 0 003 15z" />
-    </svg>
   )
 }
