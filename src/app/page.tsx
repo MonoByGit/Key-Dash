@@ -110,6 +110,16 @@ function generateMockHistory() {
   const months = ['Sep', 'Oct', 'Nov', 'Dec', 'Jan', 'Feb']
   const data: Array<Record<string, number | string>> = []
 
+  // Each provider has their own base cost pattern
+  const mockBaseCosts: Record<string, number> = {
+    anthropic: 150,
+    openai: 200,
+    deepseek: 80,
+    minimax: 60,
+    google: 100,
+    azure: 120,
+  }
+
   months.forEach((month, monthIdx) => {
     const daysInMonth = 30
     for (let d = 1; d <= daysInMonth; d++) {
@@ -117,13 +127,11 @@ function generateMockHistory() {
       const providerData: Record<string, number> = {}
 
       MOCK_PROVIDERS.forEach((provider, idx) => {
-        // Each provider gets a distinct "lane" - spread out significantly from top to bottom
-        // Provider 0 (Anthropic) at top (~3000), Provider 5 (Azure) at bottom (~500)
-        const laneHeight = 500 // Large gap between lanes for clear visual separation
-        const baseValue = (MOCK_PROVIDERS.length - idx) * laneHeight
-        const dayVariation = Math.sin(d * 0.3 + idx * 0.5) * (laneHeight * 0.15)
-        const monthMultiplier = 1 + (monthIdx * 0.08)
-        providerData[provider.name] = Math.round((baseValue * monthMultiplier + dayVariation))
+        // Each provider shows their own realistic usage pattern
+        const baseCost = mockBaseCosts[provider.name] || 100
+        const monthMultiplier = 1 + (monthIdx * 0.1)
+        const dayVariation = Math.sin(d * 0.3 + idx * 0.5) * (baseCost * 0.2)
+        providerData[provider.name] = Math.round((baseCost * monthMultiplier + dayVariation))
       })
 
       data.push({ date: dateStr, ...providerData })
@@ -230,12 +238,10 @@ export default function Dashboard() {
   const generateChartData = () => {
     if (useMockData) {
       if (chartPeriod === 'day') {
-        // Last 24 hours - maintain vertical spread between providers
-        const currentMonth = MOCK_CHART_DATA.slice(-24)
-        const scaleFactor = 0.4 // Scale down but maintain the lane separation
-        return currentMonth.map((d, idx) => ({
+        // Last 24 hours - show hourly data
+        return MOCK_CHART_DATA.slice(-24).map((d, idx) => ({
           date: `${idx}:00`,
-          ...Object.fromEntries(Object.entries(d).filter(([k]) => k !== 'date').map(([k, v]) => [k, Math.round(Number(v) * scaleFactor)]))
+          ...Object.fromEntries(Object.entries(d).filter(([k]) => k !== 'date'))
         }))
       } else if (chartPeriod === 'week') {
         // Last 7 days
@@ -260,9 +266,7 @@ export default function Dashboard() {
       }
     }
 
-    // Real data - use actual totals from API keys
-    const totalCost = apiKeys.reduce((sum, key) => sum + key.cost, 0)
-
+    // Real data - use actual costs per provider
     const days = chartPeriod === 'day' ? 24 : chartPeriod === 'week' ? 7 : 30
     const data: Array<Record<string, number | string>> = []
     for (let i = days - 1; i >= 0; i--) {
@@ -275,11 +279,10 @@ export default function Dashboard() {
       providers.forEach((provider, idx) => {
         const providerKeys = apiKeys.filter((k) => k.providerId === provider.id)
         const providerCost = providerKeys.reduce((sum, k) => sum + k.cost, 0)
-        // Each provider gets a distinct lane with minimum 200 unit gap
-        const laneHeight = Math.max(200, providerCost > 0 ? providerCost / 3 : 200)
-        const baseValue = (providers.length - idx) * laneHeight
-        const variation = Math.sin(dayIndex * 0.5 + idx) * (laneHeight * 0.15)
-        providerData[provider.name] = Math.max(0, Number((baseValue + variation).toFixed(2)))
+        // Each provider shows their actual cost with realistic daily variation
+        const dailyBase = providerCost / 30
+        const variation = Math.sin(dayIndex * 0.5 + idx * 0.8) * (dailyBase * 0.3)
+        providerData[provider.name] = Math.max(0, Number((dailyBase + variation).toFixed(2)))
       })
       data.push({ date: dateStr, ...providerData })
     }
@@ -287,10 +290,6 @@ export default function Dashboard() {
   }
 
   const chartData = generateChartData()
-
-  // Calculate Y-axis domain from data to show full lane range
-  const allValues = chartData.flatMap(d => Object.values(d).filter(v => typeof v === 'number'))
-  const yAxisDomain = allValues.length > 0 ? [0, Math.max(...allValues) * 1.1] : [0, 100]
 
   // Provider comparison data
   const providerComparison = providers.map((provider, idx) => {
@@ -616,34 +615,44 @@ export default function Dashboard() {
                   ))}
                 </div>
               </div>
-              <div className="p-5">
-                <ResponsiveContainer width="100%" height={320}>
-                  <AreaChart data={chartData}>
-                    <CartesianGrid strokeDasharray="3 3" stroke="#38383a" />
-                    <XAxis dataKey="date" stroke="#6e6e73" fontSize={12} tickLine={false} axisLine={false} />
-                    <YAxis stroke="#6e6e73" fontSize={12} tickLine={false} axisLine={false} domain={yAxisDomain} />
-                    <Tooltip
-                      contentStyle={{
-                        backgroundColor: '#2c2c2e',
-                        border: '1px solid #38383a',
-                        borderRadius: '8px',
-                      }}
-                      labelStyle={{ color: '#f5f5f7' }}
-                    />
-                    <Legend />
-                    {providers.map((provider, idx) => (
-                      <Area
-                        key={provider.name}
-                        type="monotone"
-                        dataKey={provider.name}
-                        stroke={CHART_COLORS[idx % CHART_COLORS.length]}
-                        fill={CHART_COLORS[idx % CHART_COLORS.length]}
-                        fillOpacity={0.1}
-                        strokeWidth={1.5}
-                      />
-                    ))}
-                  </AreaChart>
-                </ResponsiveContainer>
+              <div className="space-y-3">
+                {providers.map((provider, idx) => (
+                  <div key={provider.id} className="bg-[#1c1c1e] border border-[#2c2c2e] rounded-xl p-4">
+                    <div className="flex items-center gap-2 mb-3">
+                      <div className="w-3 h-3 rounded-full" style={{ backgroundColor: CHART_COLORS[idx % CHART_COLORS.length] }} />
+                      <span className="text-sm font-medium text-[#f5f5f7]">{provider.displayName}</span>
+                    </div>
+                    <ResponsiveContainer width="100%" height={80}>
+                      <AreaChart data={chartData}>
+                        <defs>
+                          <linearGradient id={`color${provider.name}`} x1="0" y1="0" x2="0" y2="1">
+                            <stop offset="5%" stopColor={CHART_COLORS[idx % CHART_COLORS.length]} stopOpacity={0.3}/>
+                            <stop offset="95%" stopColor={CHART_COLORS[idx % CHART_COLORS.length]} stopOpacity={0}/>
+                          </linearGradient>
+                        </defs>
+                        <CartesianGrid strokeDasharray="3 3" stroke="#38383a" vertical={false} />
+                        <XAxis dataKey="date" stroke="#6e6e73" fontSize={10} tickLine={false} axisLine={false} />
+                        <YAxis stroke="#6e6e73" fontSize={10} tickLine={false} axisLine={false} width={30} />
+                        <Tooltip
+                          contentStyle={{
+                            backgroundColor: '#2c2c2e',
+                            border: '1px solid #38383a',
+                            borderRadius: '8px',
+                          }}
+                          labelStyle={{ color: '#f5f5f7', fontSize: 11 }}
+                          itemStyle={{ fontSize: 11 }}
+                        />
+                        <Area
+                          type="monotone"
+                          dataKey={provider.name}
+                          stroke={CHART_COLORS[idx % CHART_COLORS.length]}
+                          fill={`url(#color${provider.name})`}
+                          strokeWidth={2}
+                        />
+                      </AreaChart>
+                    </ResponsiveContainer>
+                  </div>
+                ))}
               </div>
             </div>
 
