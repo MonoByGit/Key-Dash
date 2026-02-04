@@ -367,19 +367,31 @@ export default function Dashboard() {
 
   // Toggle key active
   const handleToggleKey = async (key: ApiKey) => {
-    if (useMockData) {
-      setApiKeys(prev => prev.map(k => k.id === key.id ? { ...k, isActive: !k.isActive } : k))
-      return
-    }
+    const newIsActive = !key.isActive
+    // Optimistic update - immediately show the change
+    setApiKeys(prev => prev.map(k => k.id === key.id ? {
+      ...k,
+      isActive: newIsActive,
+      ...(newIsActive === false && {
+        requests: 0,
+        inputTokens: 0,
+        outputTokens: 0,
+        cost: 0,
+        lastUsedAt: null,
+      })
+    } : k))
+    if (useMockData) return
     try {
       const res = await fetch(`/api/keys/${key.id}`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ isActive: !key.isActive }),
+        body: JSON.stringify({ isActive: newIsActive }),
       })
       if (res.ok) fetchData()
     } catch (error) {
       console.error('Error toggling key:', error)
+      // Revert on error
+      fetchData()
     }
   }
 

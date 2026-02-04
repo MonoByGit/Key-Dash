@@ -27,9 +27,21 @@ export async function PATCH(
     const { id } = params
     const body = await request.json()
 
+    // If deactivating a key, reset all stats to zero
+    const isDeactivating = body.isActive === false
+
     const apiKey = await prisma.apiKey.update({
       where: { id },
-      data: body,
+      data: {
+        ...body,
+        ...(isDeactivating && {
+          requests: 0,
+          inputTokens: 0,
+          outputTokens: 0,
+          cost: 0,
+          lastUsedAt: null,
+        }),
+      },
       include: {
         provider: true,
       },
