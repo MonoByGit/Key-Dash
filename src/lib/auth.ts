@@ -4,17 +4,8 @@ import CredentialsProvider from 'next-auth/providers/credentials';
 import bcrypt from 'bcryptjs';
 import { prisma } from '@/lib/prisma';
 
-export const { handlers, auth, signIn, signOut } = NextAuth({
+export const authOptions = {
   adapter: PrismaAdapter(prisma),
-  logger: {
-    error: (error) => {
-      // Suppress UntrustedHost errors in production
-      if (process.env.NODE_ENV === 'production' && error.message?.includes('UntrustedHost')) {
-        return
-      }
-      console.error('NextAuth error:', error)
-    },
-  },
   providers: [
     CredentialsProvider({
       name: 'credentials',
@@ -74,29 +65,6 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       return session;
     },
   },
-});
+};
 
-// TypeScript types for NextAuth
-declare module 'next-auth' {
-  interface Session {
-    user: {
-      id: string;
-      email?: string | null;
-      name?: string | null;
-      image?: string | null;
-    };
-  }
-
-  interface User {
-    id: string;
-    email?: string | null;
-    name?: string | null;
-    image?: string | null;
-  }
-}
-
-declare module '@auth/core/jwt' {
-  interface JWT {
-    id: string;
-  }
-}
+export const { handlers, auth, signIn, signOut } = NextAuth(authOptions);
