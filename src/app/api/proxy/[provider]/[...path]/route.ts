@@ -62,6 +62,13 @@ export async function POST(
       );
     }
 
+    if (apiKey.archivedAt) {
+      return NextResponse.json(
+        { error: 'API key is gearchiveerd' },
+        { status: 403 }
+      );
+    }
+
     // Decrypt API key
     const decryptedKey = decrypt(apiKey.key);
 

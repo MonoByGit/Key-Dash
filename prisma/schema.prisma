@@ -92,6 +92,7 @@ model ApiKey {
   cost         Float    @default(0)
   lastUsedAt   DateTime?
   isActive     Boolean  @default(true)
+  archivedAt   DateTime?
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
   logs         ApiLog[]

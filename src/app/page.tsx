@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { Plus, Trash2, Copy, Check, ChevronDown, ChevronUp, Activity, DollarSign, Key, Server, BarChart3, Globe, Cpu, Search, LogOut } from 'lucide-react'
+import { Plus, Trash2, Copy, Check, ChevronDown, ChevronUp, Activity, DollarSign, Key, Server, BarChart3, Globe, Cpu, Search, LogOut, Archive } from 'lucide-react'
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, BarChart, Bar, Legend } from 'recharts'
 
 // Cloud icon component
@@ -38,6 +38,7 @@ interface ApiKey {
   cost: number
   lastUsedAt: string | null
   isActive: boolean
+  archivedAt: string | null
 }
 
 interface NewKeyData {
@@ -134,8 +135,9 @@ const MOCK_CHART_DATA = generateMockHistory()
 export default function Dashboard() {
   const [providers, setProviders] = useState<Provider[]>([])
   const [apiKeys, setApiKeys] = useState<ApiKey[]>([])
+  const [archivedKeys, setArchivedKeys] = useState<ApiKey[]>([])
   const [loading, setLoading] = useState(true)
-  const [activeTab, setActiveTab] = useState<'overview' | 'keys' | 'providers'>('overview')
+  const [activeTab, setActiveTab] = useState<'overview' | 'keys' | 'providers' | 'archive'>('overview')
   const [showAddKeyModal, setShowAddKeyModal] = useState(false)
   const [showAddProviderModal, setShowAddProviderModal] = useState(false)
   const [copiedKeyId, setCopiedKeyId] = useState<string | null>(null)
@@ -167,9 +169,10 @@ export default function Dashboard() {
     if (useMockData) return
 
     try {
-      const [providersRes, keysRes] = await Promise.all([
+      const [providersRes, keysRes, archivedRes] = await Promise.all([
         fetch('/api/providers'),
         fetch('/api/keys'),
+        fetch('/api/keys?archived=true'),
       ])
 
       if (providersRes.ok) {
@@ -179,6 +182,10 @@ export default function Dashboard() {
       if (keysRes.ok) {
         const data = await keysRes.json()
         setApiKeys(data)
+      }
+      if (archivedRes.ok) {
+        const data = await archivedRes.json()
+        setArchivedKeys(data)
       }
     } catch (error) {
       console.error('Error fetching data:', error)
@@ -373,6 +380,39 @@ export default function Dashboard() {
     }
   }
 
+  // Archive key
+  const handleArchive = async (id: string) => {
+    if (useMockData) {
+      const key = apiKeys.find(k => k.id === id)
+      if (key) {
+        const archivedKey = { ...key, archivedAt: new Date().toISOString(), isActive: false }
+        setApiKeys(prev => prev.filter(k => k.id !== id))
+        // Note: We'd need a separate archived state for mock data
+      }
+      return
+    }
+    if (!confirm('Archiveren? Stats worden bewaard maar tracking stopt.')) return
+    try {
+      const res = await fetch(`/api/keys/${id}/archive`, { method: 'POST' })
+      if (res.ok) fetchData()
+    } catch (error) {
+      console.error('Error archiving key:', error)
+    }
+  }
+
+  // Restore key
+  const handleRestore = async (id: string) => {
+    if (useMockData) {
+      return
+    }
+    try {
+      const res = await fetch(`/api/keys/${id}/restore`, { method: 'POST' })
+      if (res.ok) fetchData()
+    } catch (error) {
+      console.error('Error restoring key:', error)
+    }
+  }
+
   // Toggle key active
   const handleToggleKey = async (key: ApiKey) => {
     const newIsActive = !key.isActive
@@ -478,7 +518,7 @@ export default function Dashboard() {
 
               {/* Tabs */}
               <div className="flex bg-[#3a3a3c] rounded-lg p-0.5">
-                {['overview', 'keys', 'providers'].map((tab) => (
+                {['overview', 'keys', 'providers', 'archive'].map((tab) => (
                   <button
                     key={tab}
                     onClick={() => setActiveTab(tab as typeof activeTab)}
@@ -488,7 +528,7 @@ export default function Dashboard() {
                         : 'text-[#98989d] hover:text-[#f5f5f7]'
                     }`}
                   >
-                    {tab === 'overview' ? 'Overzicht' : tab === 'keys' ? 'Sleutels' : 'Aanbieders'}
+                    {tab === 'overview' ? 'Overzicht' : tab === 'keys' ? 'Sleutels' : tab === 'providers' ? 'Aanbieders' : 'Archief'}
                   </button>
                 ))}
               </div>
@@ -761,6 +801,13 @@ export default function Dashboard() {
                               )}
                             </button>
                             <button
+                              onClick={() => handleArchive(key.id)}
+                              className="p-1.5 hover:bg-[#ff9f0a]/10 rounded transition-colors"
+                              title="Archiveren"
+                            >
+                              <Archive className="w-4 h-4 text-[#ff9f0a]" />
+                            </button>
+                            <button
                               onClick={() => handleDeleteKey(key.id)}
                               className="p-1.5 hover:bg-[#ff453a]/10 rounded transition-colors"
                               title="Verwijder"
@@ -880,6 +927,13 @@ export default function Dashboard() {
                                   )}
                                 </button>
                                 <button
+                                  onClick={() => handleArchive(key.id)}
+                                  className="p-1.5 hover:bg-[#ff9f0a]/10 rounded transition-colors"
+                                  title="Archiveren"
+                                >
+                                  <Archive className="w-4 h-4 text-[#ff9f0a]" />
+                                </button>
+                                <button
                                   onClick={() => handleDeleteKey(key.id)}
                                   className="p-1.5 hover:bg-[#ff453a]/10 rounded transition-colors"
                                 >
@@ -960,6 +1014,70 @@ export default function Dashboard() {
                 </div>
               ))}
             </div>
+          </div>
+        )}
+
+        {/* Archive Tab */}
+        {activeTab === 'archive' && (
+          <div className="space-y-4">
+            <div className="flex items-center justify-between">
+              <div>
+                <h2 className="text-[17px] font-medium text-[#f5f5f7]">Archief</h2>
+                <p className="text-sm text-[#8e8e93]">Gearchiveerde API sleutels worden niet meer getracked</p>
+              </div>
+            </div>
+
+            {archivedKeys.length === 0 ? (
+              <div className="bg-[#2c2c2e] border border-[#38383a] rounded-xl p-8 text-center">
+                <p className="text-[#8e8e93]">Geen gearchiveerde sleutels</p>
+              </div>
+            ) : (
+              <div className="bg-[#2c2c2e] border border-[#38383a] rounded-xl overflow-hidden">
+                <table className="w-full">
+                  <thead className="bg-[#1a1a25]">
+                    <tr>
+                      <th className="text-left px-4 py-3 text-xs font-medium text-[#8e8e93]">Naam</th>
+                      <th className="text-left px-4 py-3 text-xs font-medium text-[#8e8e93]">Provider</th>
+                      <th className="text-left px-4 py-3 text-xs font-medium text-[#8e8e93]">Kosten</th>
+                      <th className="text-left px-4 py-3 text-xs font-medium text-[#8e8e93]">Tokens</th>
+                      <th className="text-left px-4 py-3 text-xs font-medium text-[#8e8e93]">Archief datum</th>
+                      <th className="text-right px-4 py-3 text-xs font-medium text-[#8e8e93]">Acties</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {archivedKeys.map((key) => (
+                      <tr key={key.id} className="border-b border-[#38383a]/50">
+                        <td className="px-4 py-3">
+                          <div className="flex items-center gap-2">
+                            <div className="p-1 bg-[#3a3a3c] rounded">
+                              {getProviderIcon(key.provider)}
+                            </div>
+                            <div>
+                              <p className="text-sm text-[#f5f5f7]">{key.name}</p>
+                              {key.label && <p className="text-xs text-[#8e8e93]">{key.label}</p>}
+                            </div>
+                          </div>
+                        </td>
+                        <td className="px-4 py-3 text-sm text-[#8e8e93]">{key.provider.displayName}</td>
+                        <td className="px-4 py-3 text-sm text-[#f5f5f7]">${key.cost.toFixed(2)}</td>
+                        <td className="px-4 py-3 text-sm text-[#f5f5f7]">{(key.inputTokens + key.outputTokens).toLocaleString()}</td>
+                        <td className="px-4 py-3 text-sm text-[#8e8e93]">
+                          {key.archivedAt ? new Date(key.archivedAt).toLocaleDateString('nl-NL') : '-'}
+                        </td>
+                        <td className="px-4 py-3 text-right">
+                          <button
+                            onClick={() => handleRestore(key.id)}
+                            className="px-3 py-1 bg-[#48484a] hover:bg-[#555557] text-[#f5f5f7] text-xs font-medium rounded-lg transition-colors"
+                          >
+                            Herstellen
+                          </button>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            )}
           </div>
         )}
       </main>
