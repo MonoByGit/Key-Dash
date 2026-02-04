@@ -288,6 +288,10 @@ export default function Dashboard() {
 
   const chartData = generateChartData()
 
+  // Calculate Y-axis domain from data to show full lane range
+  const allValues = chartData.flatMap(d => Object.values(d).filter(v => typeof v === 'number'))
+  const yAxisDomain = allValues.length > 0 ? [0, Math.max(...allValues) * 1.1] : [0, 100]
+
   // Provider comparison data
   const providerComparison = providers.map((provider, idx) => {
     const providerKeys = apiKeys.filter((k) => k.providerId === provider.id)
@@ -617,7 +621,7 @@ export default function Dashboard() {
                   <AreaChart data={chartData}>
                     <CartesianGrid strokeDasharray="3 3" stroke="#38383a" />
                     <XAxis dataKey="date" stroke="#6e6e73" fontSize={12} tickLine={false} axisLine={false} />
-                    <YAxis stroke="#6e6e73" fontSize={12} tickLine={false} axisLine={false} domain={[0, 'auto']} />
+                    <YAxis stroke="#6e6e73" fontSize={12} tickLine={false} axisLine={false} domain={yAxisDomain} />
                     <Tooltip
                       contentStyle={{
                         backgroundColor: '#2c2c2e',
