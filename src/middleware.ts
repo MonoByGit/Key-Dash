@@ -3,7 +3,14 @@ import { NextResponse } from 'next/server';
 
 export default auth((req) => {
   const isAuth = !!req.auth;
-  const isAuthPage = req.nextUrl.pathname.startsWith('/login');
+  const pathname = req.nextUrl.pathname;
+
+  // Allow healthcheck and auth endpoints without auth
+  if (pathname === '/api/health' || pathname.startsWith('/api/auth')) {
+    return NextResponse.next();
+  }
+
+  const isAuthPage = pathname.startsWith('/login');
 
   if (isAuthPage) {
     if (isAuth) {
