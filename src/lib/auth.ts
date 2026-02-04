@@ -6,6 +6,15 @@ import { prisma } from '@/lib/prisma';
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
   adapter: PrismaAdapter(prisma),
+  logger: {
+    error: (error) => {
+      // Suppress UntrustedHost errors in production
+      if (process.env.NODE_ENV === 'production' && error.message?.includes('UntrustedHost')) {
+        return
+      }
+      console.error('NextAuth error:', error)
+    },
+  },
   providers: [
     CredentialsProvider({
       name: 'credentials',
