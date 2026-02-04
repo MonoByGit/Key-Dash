@@ -197,6 +197,8 @@ export default function Dashboard() {
       })))
       setLoading(false)
     } else {
+      // Clear mock data immediately when switching to real data
+      setApiKeys([])
       fetchData()
     }
   }, [useMockData])
@@ -633,6 +635,7 @@ export default function Dashboard() {
                   const providerKeys = keysByProvider[provider.id] || []
                   const providerCost = providerKeys.reduce((sum, k) => sum + k.cost, 0)
                   const providerTokens = providerKeys.reduce((sum, k) => sum + k.inputTokens + k.outputTokens, 0)
+                  const hasKeys = providerKeys.length > 0
 
                   return (
                     <div key={provider.id} className="bg-[#2c2c2e] p-4">
@@ -642,19 +645,32 @@ export default function Dashboard() {
                         </div>
                         <div>
                           <h3 className="font-medium text-[#f5f5f7]">{provider.displayName}</h3>
-                          <p className="text-xs text-[#8e8e93]">{providerKeys.length} sleutels</p>
+                          <p className="text-xs text-[#8e8e93]">{hasKeys ? `${providerKeys.length} sleutels` : 'Geen sleutels'}</p>
                         </div>
                       </div>
-                      <div className="space-y-1.5">
-                        <div className="flex justify-between text-[13px]">
-                          <span className="text-[#8e8e93]">Kosten</span>
-                          <span className="text-[#f5f5f7]">${providerCost.toFixed(2)}</span>
+                      {hasKeys ? (
+                        <div className="space-y-1.5">
+                          <div className="flex justify-between text-[13px]">
+                            <span className="text-[#8e8e93]">Kosten</span>
+                            <span className="text-[#f5f5f7]">${providerCost.toFixed(2)}</span>
+                          </div>
+                          <div className="flex justify-between text-[13px]">
+                            <span className="text-[#8e8e93]">Tokens</span>
+                            <span className="text-[#f5f5f7]">{providerTokens.toLocaleString()}</span>
+                          </div>
                         </div>
-                        <div className="flex justify-between text-[13px]">
-                          <span className="text-[#8e8e93]">Tokens</span>
-                          <span className="text-[#f5f5f7]">{providerTokens.toLocaleString()}</span>
-                        </div>
-                      </div>
+                      ) : (
+                        <button
+                          onClick={() => {
+                            setNewKey({ name: '', label: '', key: '', providerId: provider.id })
+                            setShowAddKeyModal(true)
+                          }}
+                          className="w-full mt-1 py-2 px-3 bg-[#48484a] hover:bg-[#555557] text-[#f5f5f7] text-xs font-medium rounded-md transition-colors flex items-center justify-center gap-1"
+                        >
+                          <Plus className="w-3.5 h-3.5" />
+                          Sleutel toevoegen
+                        </button>
+                      )}
                     </div>
                   )
                 })}
@@ -742,6 +758,13 @@ export default function Dashboard() {
                     ))}
                   </tbody>
                 </table>
+                {apiKeys.length === 0 && (
+                  <div className="py-12 text-center">
+                    <Key className="w-12 h-12 mx-auto text-[#48484a] mb-3" />
+                    <p className="text-[#8e8e93] text-sm">Nog geen API sleutels toegevoegd</p>
+                    <p className="text-[#636366] text-xs mt-1">Klik op "Nieuwe Sleutel" om je eerste API key toe te voegen</p>
+                  </div>
+                )}
               </div>
             </div>
           </>
