@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { KeyRound, Lock, Mail, ArrowRight, Loader2 } from 'lucide-react';
+import { KeyRound, ArrowRight, Loader2 } from 'lucide-react';
 
 export default function LoginPage() {
   const router = useRouter();
@@ -38,81 +38,78 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen bg-[#0a0a0f] flex items-center justify-center p-4">
+    <div className="min-h-screen bg-black text-[#f5f5f7] flex items-center justify-center p-4">
       <div className="w-full max-w-md">
-        {/* Logo */}
-        <div className="text-center mb-8">
-          <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-gradient-to-br from-blue-500/20 to-purple-500/20 border border-white/10 mb-4">
-            <KeyRound className="w-8 h-8 text-blue-400" />
+        {/* Header */}
+        <header className="border-b border-[#38383a] bg-[#2c2c2e]/90 backdrop-blur-xl sticky top-0 z-10 mb-8">
+          <div className="max-w-7xl mx-auto px-5 py-3">
+            <div className="flex items-center gap-3">
+              <div className="p-1.5 bg-[#48484a] rounded-lg">
+                <KeyRound className="w-5 h-5 text-[#98989d]" />
+              </div>
+              <h1 className="text-[17px] font-medium text-[#f5f5f7]">Key Dash</h1>
+            </div>
           </div>
-          <h1 className="text-2xl font-bold text-white mb-2">Key Dash</h1>
-          <p className="text-gray-400">AI API Dashboard</p>
-        </div>
+        </header>
 
         {/* Login Form */}
-        <div className="bg-[#12121a] rounded-3xl border border-white/5 p-8 shadow-2xl">
-          <h2 className="text-xl font-semibold text-white mb-6">Inloggen</h2>
+        <div className="bg-[#2c2c2e] border border-[#38383a] rounded-xl p-5">
+          <h2 className="text-[13px] font-medium text-[#f5f5f7] mb-4">Inloggen</h2>
 
           {error && (
-            <div className="mb-6 p-4 bg-red-500/10 border border-red-500/20 rounded-xl text-red-400 text-sm">
+            <div className="mb-4 p-3 bg-[#ff453a]/10 border border-[#ff453a]/20 rounded-lg text-[#ff453a] text-xs">
               {error}
             </div>
           )}
 
-          <form onSubmit={handleSubmit} className="space-y-5">
+          <form onSubmit={handleSubmit} className="space-y-4">
             <div>
-              <label className="block text-sm font-medium text-gray-300 mb-2">
+              <label className="block text-xs font-medium text-[#8e8e93] mb-1.5">
                 Email
               </label>
-              <div className="relative">
-                <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-500" />
-                <input
-                  type="email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  className="w-full bg-[#1a1a25] border border-white/10 rounded-xl py-3 pl-12 pr-4 text-white placeholder-gray-500 focus:outline-none focus:border-blue-500/50 transition-colors"
-                  placeholder="jouw@email.com"
-                  required
-                />
-              </div>
+              <input
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                className="w-full bg-[#1a1a25] border border-[#38383a] rounded-lg py-2 px-3 text-[#f5f5f7] placeholder-[#636366] text-sm focus:outline-none focus:border-[#48484a] transition-colors"
+                placeholder="jouw@email.com"
+                required
+              />
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-300 mb-2">
+              <label className="block text-xs font-medium text-[#8e8e93] mb-1.5">
                 Wachtwoord
               </label>
-              <div className="relative">
-                <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-500" />
-                <input
-                  type="password"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  className="w-full bg-[#1a1a25] border border-white/10 rounded-xl py-3 pl-12 pr-4 text-white placeholder-gray-500 focus:outline-none focus:border-blue-500/50 transition-colors"
-                  placeholder="••••••••"
-                  required
-                />
-              </div>
+              <input
+                type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                className="w-full bg-[#1a1a25] border border-[#38383a] rounded-lg py-2 px-3 text-[#f5f5f7] placeholder-[#636366] text-sm focus:outline-none focus:border-[#48484a] transition-colors"
+                placeholder="••••••••"
+                required
+              />
             </div>
 
             <button
               type="submit"
               disabled={loading}
-              className="w-full bg-gradient-to-r from-blue-500 to-purple-500 text-white font-medium py-3 rounded-xl hover:opacity-90 transition-opacity disabled:opacity-50 flex items-center justify-center gap-2"
+              className="w-full bg-[#48484a] hover:bg-[#555557] text-[#f5f5f7] text-xs font-medium py-2 rounded-lg transition-colors flex items-center justify-center gap-1.5"
             >
               {loading ? (
-                <Loader2 className="w-5 h-5 animate-spin" />
+                <Loader2 className="w-4 h-4 animate-spin" />
               ) : (
                 <>
                   Inloggen
-                  <ArrowRight className="w-4 h-4" />
+                  <ArrowRight className="w-3.5 h-3.5" />
                 </>
               )}
             </button>
           </form>
         </div>
 
-        <p className="text-center text-gray-500 text-sm mt-6">
-          Beveiligd met end-to-end encryptie
+        <p className="text-center text-[#636366] text-xs mt-4">
+          AI API Dashboard
         </p>
       </div>
     </div>

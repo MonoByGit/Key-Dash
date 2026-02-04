@@ -998,17 +998,20 @@ export default function Dashboard() {
 
               <div>
                 <label className="block text-sm text-[#8e8e93] mb-2">Provider</label>
-                <select
-                  value={newKey.providerId}
-                  onChange={(e) => useNewKey({ ...newKey, providerId: e.target.value })}
-                  className="w-full px-4 py-2 bg-[#3a3a3c] border border-[#48484a] text-[#f5f5f7] text-[14px] rounded-lg focus:outline-none focus:border-[#636366]"
-                  required
-                >
-                  <option value="">Selecteer...</option>
-                  {providers.map((p) => (
-                    <option key={p.id} value={p.id}>{p.displayName}</option>
-                  ))}
-                </select>
+                <div className="relative">
+                  <select
+                    value={newKey.providerId}
+                    onChange={(e) => useNewKey({ ...newKey, providerId: e.target.value })}
+                    className="w-full px-4 py-2 bg-[#3a3a3c] border border-[#48484a] text-[#f5f5f7] text-[14px] rounded-lg appearance-none focus:outline-none focus:border-[#636366]"
+                    required
+                  >
+                    <option value="">Selecteer...</option>
+                    {providers.map((p) => (
+                      <option key={p.id} value={p.id}>{p.displayName}</option>
+                    ))}
+                  </select>
+                  <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[#636366] pointer-events-none" />
+                </div>
               </div>
 
               <div>
