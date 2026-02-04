@@ -1,0 +1,59 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Provider {
+  id          String   @id @default(cuid())
+  name        String   @unique
+  displayName String
+  icon        String?
+  baseUrl     String?
+  authType    String   @default("bearer")
+  headers     Json?
+  pricing     Json?
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  keys        ApiKey[]
+}
+
+model ApiKey {
+  id           String   @id @default(cuid())
+  name         String
+  key          String   // Encrypted
+  label        String?
+  providerId   String
+  provider     Provider @relation(fields: [providerId], references: [id], onDelete: Cascade)
+  rateLimit    Int?
+  requests     Int      @default(0)
+  inputTokens  Int      @default(0)
+  outputTokens Int      @default(0)
+  cost         Float    @default(0)
+  lastUsedAt   DateTime?
+  isActive     Boolean  @default(true)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  @@index([providerId])
+}
+
+model UsageRecord {
+  id           String   @id @default(cuid())
+  apiKeyId     String
+  date         DateTime @db.Date
+  requests     Int      @default(0)
+  inputTokens  Int      @default(0)
+  outputTokens Int      @default(0)
+  cost         Float    @default(0)
+  createdAt    DateTime @default(now())
+
+  @@index([apiKeyId, date])
+}
