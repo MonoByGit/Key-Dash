@@ -1,124 +1,111 @@
-# AI API Dashboard
+# Key Dash - AI API Dashboard
 
-Een strak, modern dashboard om je AI API keys en verbruik te beheren voor Anthropic, DeepSeek, Minimax, OpenAI en meer.
+Een strak, modern dashboard om je AI API keys en verbruik te beheren voor Anthropic, OpenAI, DeepSeek, Minimax, Google AI, Azure en meer.
 
 ## Features
 
-- **Provider Management** - Voeg providers toe, bewerk of verwijder ze
-- **Key Management** - Beheer meerdere API keys per provider
-- **Usage Tracking** - Monitor kosten, tokens en requests
-- **Encrypted Storage** - API keys worden veilig versleuteld opgeslagen
-- **Modern UI** - Strak, dark-themed design
+- **Multi-provider ondersteuning** - Anthropic, OpenAI, DeepSeek, Minimax, Google AI, Azure OpenAI
+- **Kosten tracking** - Automatische kostenberekening per provider en key
+- **Usage monitoring** - Track requests, input/output tokens per API key
+- **Archive functionaliteit** - Archiveer keys om tracking te pauzeren maar stats te behouden
+- **API Proxy** - Gebruik Key Dash als proxy voor het tracken van API usage
+- **Responsive design** - Werkt op desktop en mobile
+- **Donker thema** - Subtiele cyberpunk-kleuren voor een moderne uitstraling
 
 ## Tech Stack
 
-- **Framework**: Next.js 14
+- **Framework**: Next.js 14 (App Router)
 - **Database**: PostgreSQL (via Prisma ORM)
 - **Styling**: Tailwind CSS
 - **Charts**: Recharts
 - **Icons**: Lucide React
 
-## Getting Started
+## Quick Start
 
-### Prerequisites
-
-- Node.js 18+
-- PostgreSQL database (lokaal of Railway)
-
-### Installation
-
-1. Clone de repository
-2. Installeer dependencies:
+### Installatie
 
 ```bash
+# Installeer dependencies
 npm install
-```
 
-3. Kopieer `.env.example` naar `.env` en vul je database URL in:
-
-```bash
-cp .env.example .env
-```
-
-4. Genereer Prisma client en push de database schema:
-
-```bash
+# Genereer Prisma client en push database schema
 npm run db:generate
 npm run db:push
-```
 
-5. Seed de standaard providers:
-
-```bash
+# Seed de standaard providers
 npm run db:seed
-```
 
-6. Start de development server:
-
-```bash
+# Start development server
 npm run dev
 ```
 
 Open [http://localhost:3000](http://localhost:3000) in je browser.
 
+### Environment Variables
+
+```env
+DATABASE_URL="postgresql://..."
+ADMIN_EMAIL="jouw@email.com"
+ADMIN_PASSWORD="jouw-wachtwoord"
+SESSION_SECRET="een-lange-willekeurige-string"
+```
+
 ## Deployment op Railway
 
-### Stap 1: Railway Project Aanmaken
+1. Push naar GitHub
+2. Maak een nieuw project aan op Railway
+3. Voeg PostgreSQL toe als database service
+4. Stel environment variables in
+5. Railway deployed automatisch
 
-1. Ga naar [Railway](https://railway.app) en log in
-2. Klik op "New Project"
-3. Kies "Deploy from GitHub repo" of upload je code
+Na deployment is je dashboard beschikbaar op je Railway URL.
 
-### Stap 2: PostgreSQL Database Toevoegen
+## Gebruik
 
-1. In je Railway project, klik op "New Service"
-2. Kies "Database" → "PostgreSQL"
-3. Wacht tot de database is geïnstalleerd
+### Nieuwe API Key toevoegen
 
-### Stap 3: Environment Variables
+1. Ga naar "Sleutels" tab
+2. Klik op "Sleutel Toevoegen"
+3. Selecteer provider, geef naam/label op en plak de API key
 
-1. Klik op "Variables" in je Railway project
-2. Voeg de volgende variabelen toe:
+### Usage tracken via proxy
 
+```bash
+curl -X POST "https://key-dash.domain.com/api/proxy/openai/chat/completions" \
+  -H "Authorization: Bearer jouw-api-key" \
+  -H "Content-Type: application/json" \
+  -H "X-Key-Dash-Key: jouw-key-dash-key-id" \
+  -d '{"model": "gpt-4", "messages": [...]}'
 ```
-DATABASE_URL="postgresql://postgres:password@hostname:5432/railway?schema=public"
-ENCRYPTION_KEY="een-lange-willekeurige-string-hier"
-```
 
-De `DATABASE_URL` wordt automatisch ingevuld door Railway bij de PostgreSQL service.
+### Keys archiveren
 
-### Stap 4: Deploy
+1. Ga naar "Overzicht" of "Sleutels"
+2. Klik op het archive icoon naast de key
+3. Key wordt gearchiveerd en niet meer gebruikt in proxy
+4. Stats blijven behouden - je kunt de key later herstellen
 
-1. Railway zal automatisch builden en deployen
-2. Na deployment is je dashboard beschikbaar op de Railway URL
+## API Endpoints
 
-### Handleiding Railway + PostgreSQL
+### Keys
+| Methode | Endpoint | Beschrijving |
+|---------|----------|--------------|
+| GET | `/api/keys` | Alle keys ophalen |
+| POST | `/api/keys` | Nieuwe key toevoegen |
+| DELETE | `/api/keys/[id]` | Key verwijderen |
+| POST | `/api/keys/[id]/archive` | Key archiveren |
+| POST | `/api/keys/[id]/restore` | Key herstellen |
 
-Zie de [Railway docs](https://docs.railway.deploy/) voor meer informatie over deployment.
+### Providers
+| Methode | Endpoint | Beschrijving |
+|---------|----------|--------------|
+| GET | `/api/providers` | Alle providers ophalen |
+| POST | `/api/providers` | Provider toevoegen |
 
-## Providers Toevoegen
-
-Het dashboard komt met vooringestelde providers:
-- Anthropic
-- OpenAI
-- DeepSeek
-- Minimax
-
-Je kunt zelf extra providers toevoegen via het "Providers" tabblad met:
-- Naam en icoon
-- API endpoint URL
-- Authenticatie type (Bearer, API Key, etc.)
-- Pricing per 1M tokens
-
-## API Keys Toevoegen
-
-1. Klik op "Nieuwe Key"
-2. Geef de key een naam en optioneel label
-3. Selecteer de provider
-4. Plak je API key
-5. Klik op "Toevoegen"
-
-Je keys worden versleuteld opgeslagen en zijn veilig.
+### Proxy
+| Methode | Endpoint | Beschrijving |
+|---------|----------|--------------|
+| * | `/api/proxy/[provider]/[...path]` | Proxy request met tracking |
 
 ## Project Structuur
 
@@ -130,15 +117,34 @@ ai-api-dashboard/
 ├── src/
 │   ├── app/
 │   │   ├── api/           # API routes
-│   │   ├── globals.css    # Tailwind styles
-│   │   ├── layout.tsx     # Root layout
-│   │   └── page.tsx       # Dashboard page
+│   │   │   ├── keys/      # Key management endpoints
+│   │   │   ├── providers/ # Provider endpoints
+│   │   │   └── proxy/     # API proxy
+│   │   ├── globals.css   # Tailwind styles
+│   │   ├── layout.tsx    # Root layout
+│   │   ├── page.tsx      # Dashboard
+│   │   └── login/        # Login page
 │   └── lib/
-│       ├── encryption.ts  # Encryptie utilities
-│       └── prisma.ts      # Prisma client
+│       ├── prisma.ts     # Prisma client
+│       └── encryption.ts  # Encryptie utilities
 ├── package.json
 └── README.md
 ```
+
+## Providers
+
+Het dashboard komt met vooringestelde providers:
+
+| Provider | Display Name | Endpoint |
+|----------|--------------|----------|
+| anthropic | Anthropic | api.anthropic.com |
+| openai | OpenAI | api.openai.com/v1 |
+| deepseek | DeepSeek | api.deepseek.com |
+| minimax | Minimax | api.minimax.chat/v1 |
+| google | Google AI | generativelanguage.googleapis.com |
+| azure | Azure OpenAI | openai.azure.com |
+
+Je kunt zelf extra providers toevoegen via het "Aanbieders" tabblad.
 
 ## License
 
