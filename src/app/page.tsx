@@ -627,8 +627,8 @@ export default function Dashboard() {
                         dataKey={provider.name}
                         stroke={CHART_COLORS[idx % CHART_COLORS.length]}
                         fill={CHART_COLORS[idx % CHART_COLORS.length]}
-                        fillOpacity={0.15}
-                        strokeWidth={2}
+                        fillOpacity={0.1}
+                        strokeWidth={1.5}
                       />
                     ))}
                   </AreaChart>
@@ -650,7 +650,16 @@ export default function Dashboard() {
                         <XAxis type="number" stroke="#6e6e73" fontSize={12} tickLine={false} axisLine={false} />
                         <YAxis type="category" dataKey="name" stroke="#98989d" fontSize={13} width={100} tickLine={false} axisLine={false} />
                         <Tooltip contentStyle={{ backgroundColor: '#2c2c2e', border: '1px solid #38383a', borderRadius: '8px' }} />
-                        <Bar dataKey="cost" fill="#5e9eff" radius={4} />
+                        {providerComparison.map((item, idx) => (
+                          <Bar
+                            key={item.name}
+                            dataKey="cost"
+                            fill={CHART_COLORS[idx % CHART_COLORS.length]}
+                            fillOpacity={0.5}
+                            radius={4}
+                            data={[item]}
+                          />
+                        ))}
                       </BarChart>
                     </ResponsiveContainer>
                   </div>
@@ -668,7 +677,16 @@ export default function Dashboard() {
                         <XAxis type="number" stroke="#6e6e73" fontSize={12} tickLine={false} axisLine={false} />
                         <YAxis type="category" dataKey="name" stroke="#98989d" fontSize={13} width={100} tickLine={false} axisLine={false} />
                         <Tooltip contentStyle={{ backgroundColor: '#2c2c2e', border: '1px solid #38383a', borderRadius: '8px' }} />
-                        <Bar dataKey="tokens" fill="#22c55e" radius={4} />
+                        {providerComparison.map((item, idx) => (
+                          <Bar
+                            key={item.name}
+                            dataKey="tokens"
+                            fill={CHART_COLORS[idx % CHART_COLORS.length]}
+                            fillOpacity={0.5}
+                            radius={4}
+                            data={[item]}
+                          />
+                        ))}
                       </BarChart>
                     </ResponsiveContainer>
                   </div>
