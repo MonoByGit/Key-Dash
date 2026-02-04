@@ -68,8 +68,8 @@ const PROVIDER_ICONS: Record<string, React.ReactNode> = {
   azure: <Cloud className="w-5 h-5" />,
 }
 
-// Chart colors - grayscale with subtle tones
-const CHART_COLORS = ['#a0a0a0', '#707070', '#505050', '#404040', '#303030', '#505050']
+// Chart colors - vibrant, distinct colors for dark theme
+const CHART_COLORS = ['#64d2ff', '#bf5af2', '#ff9f0a', '#ff453a', '#30d158', '#ffcc00']
 
 // Mock data for 6 providers with multiple keys each
 const MOCK_PROVIDERS = [
@@ -482,6 +482,7 @@ export default function Dashboard() {
       <header className="border-b border-[#38383a] bg-[#2c2c2e]/90 backdrop-blur-xl sticky top-0 z-10">
         <div className="max-w-7xl mx-auto px-5 py-3">
           <div className="flex items-center justify-between">
+            {/* Logo - Left */}
             <div className="flex items-center gap-3">
               <div className="p-1.5 bg-[#48484a] rounded-lg">
                 <Activity className="w-5 h-5 text-[#98989d]" />
@@ -489,16 +490,25 @@ export default function Dashboard() {
               <h1 className="text-[17px] font-medium text-[#f5f5f7]">AI API Dashboard</h1>
             </div>
 
-            <div className="flex items-center gap-4">
-              {/* Logout Button */}
-              <button
-                onClick={handleLogout}
-                className="flex items-center gap-1.5 px-3 py-1.5 text-[#98989d] hover:text-[#f5f5f7] hover:bg-[#3a3a3c] rounded-lg transition-colors"
-                title="Uitloggen"
-              >
-                <LogOut className="w-4 h-4" />
-              </button>
+            {/* Tabs - Center */}
+            <div className="flex bg-[#3a3a3c] rounded-lg p-0.5">
+              {['overview', 'keys', 'providers', 'archive'].map((tab) => (
+                <button
+                  key={tab}
+                  onClick={() => setActiveTab(tab as typeof activeTab)}
+                  className={`px-4 py-1.5 text-[13px] font-medium transition-all duration-200 rounded-md ${
+                    activeTab === tab
+                      ? 'bg-[#48484a] text-[#f5f5f7] shadow-sm'
+                      : 'text-[#98989d] hover:text-[#f5f5f7]'
+                  }`}
+                >
+                  {tab === 'overview' ? 'Overzicht' : tab === 'keys' ? 'Sleutels' : tab === 'providers' ? 'Aanbieders' : 'Archief'}
+                </button>
+              ))}
+            </div>
 
+            {/* Right Actions */}
+            <div className="flex items-center gap-4">
               {/* Mock Data Toggle */}
               <div className="flex items-center gap-2">
                 <span className={`text-xs ${useMockData ? 'text-[#98989d]' : 'text-[#6e6e73]'}`}>Data</span>
@@ -516,22 +526,14 @@ export default function Dashboard() {
                 </button>
               </div>
 
-              {/* Tabs */}
-              <div className="flex bg-[#3a3a3c] rounded-lg p-0.5">
-                {['overview', 'keys', 'providers', 'archive'].map((tab) => (
-                  <button
-                    key={tab}
-                    onClick={() => setActiveTab(tab as typeof activeTab)}
-                    className={`px-4 py-1.5 text-[13px] font-medium transition-all duration-200 rounded-md ${
-                      activeTab === tab
-                        ? 'bg-[#48484a] text-[#f5f5f7] shadow-sm'
-                        : 'text-[#98989d] hover:text-[#f5f5f7]'
-                    }`}
-                  >
-                    {tab === 'overview' ? 'Overzicht' : tab === 'keys' ? 'Sleutels' : tab === 'providers' ? 'Aanbieders' : 'Archief'}
-                  </button>
-                ))}
-              </div>
+              {/* Logout Button */}
+              <button
+                onClick={handleLogout}
+                className="flex items-center gap-1.5 px-3 py-1.5 text-[#98989d] hover:text-[#f5f5f7] hover:bg-[#3a3a3c] rounded-lg transition-colors"
+                title="Uitloggen"
+              >
+                <LogOut className="w-4 h-4" />
+              </button>
             </div>
           </div>
         </div>
