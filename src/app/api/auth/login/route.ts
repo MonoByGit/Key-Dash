@@ -1,5 +1,4 @@
 import { NextResponse } from 'next/server';
-import bcrypt from 'bcryptjs';
 
 const ADMIN_EMAIL = process.env.ADMIN_EMAIL || 'admin@keydash.local';
 const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || 'keydash2024';
