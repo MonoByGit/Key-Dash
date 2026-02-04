@@ -615,44 +615,34 @@ export default function Dashboard() {
                   ))}
                 </div>
               </div>
-              <div className="space-y-3">
-                {providers.map((provider, idx) => (
-                  <div key={provider.id} className="bg-[#1c1c1e] border border-[#2c2c2e] rounded-xl p-4">
-                    <div className="flex items-center gap-2 mb-3">
-                      <div className="w-3 h-3 rounded-full" style={{ backgroundColor: CHART_COLORS[idx % CHART_COLORS.length] }} />
-                      <span className="text-sm font-medium text-[#f5f5f7]">{provider.displayName}</span>
-                    </div>
-                    <ResponsiveContainer width="100%" height={80}>
-                      <AreaChart data={chartData}>
-                        <defs>
-                          <linearGradient id={`color${provider.name}`} x1="0" y1="0" x2="0" y2="1">
-                            <stop offset="5%" stopColor={CHART_COLORS[idx % CHART_COLORS.length]} stopOpacity={0.3}/>
-                            <stop offset="95%" stopColor={CHART_COLORS[idx % CHART_COLORS.length]} stopOpacity={0}/>
-                          </linearGradient>
-                        </defs>
-                        <CartesianGrid strokeDasharray="3 3" stroke="#38383a" vertical={false} />
-                        <XAxis dataKey="date" stroke="#6e6e73" fontSize={10} tickLine={false} axisLine={false} />
-                        <YAxis stroke="#6e6e73" fontSize={10} tickLine={false} axisLine={false} width={30} />
-                        <Tooltip
-                          contentStyle={{
-                            backgroundColor: '#2c2c2e',
-                            border: '1px solid #38383a',
-                            borderRadius: '8px',
-                          }}
-                          labelStyle={{ color: '#f5f5f7', fontSize: 11 }}
-                          itemStyle={{ fontSize: 11 }}
-                        />
-                        <Area
-                          type="monotone"
-                          dataKey={provider.name}
-                          stroke={CHART_COLORS[idx % CHART_COLORS.length]}
-                          fill={`url(#color${provider.name})`}
-                          strokeWidth={2}
-                        />
-                      </AreaChart>
-                    </ResponsiveContainer>
-                  </div>
-                ))}
+              <div className="p-5">
+                <ResponsiveContainer width="100%" height={280}>
+                  <AreaChart data={chartData}>
+                    <CartesianGrid strokeDasharray="3 3" stroke="#38383a" />
+                    <XAxis dataKey="date" stroke="#6e6e73" fontSize={12} tickLine={false} axisLine={false} />
+                    <YAxis stroke="#6e6e73" fontSize={12} tickLine={false} axisLine={false} />
+                    <Tooltip
+                      contentStyle={{
+                        backgroundColor: '#2c2c2e',
+                        border: '1px solid #38383a',
+                        borderRadius: '8px',
+                      }}
+                      labelStyle={{ color: '#f5f5f7' }}
+                    />
+                    <Legend />
+                    {providers.map((provider, idx) => (
+                      <Area
+                        key={provider.name}
+                        type="monotone"
+                        dataKey={provider.name}
+                        stroke={CHART_COLORS[idx % CHART_COLORS.length]}
+                        fill={CHART_COLORS[idx % CHART_COLORS.length]}
+                        fillOpacity={0.15}
+                        strokeWidth={2}
+                      />
+                    ))}
+                  </AreaChart>
+                </ResponsiveContainer>
               </div>
             </div>
 
@@ -665,21 +655,16 @@ export default function Dashboard() {
                   </div>
                   <div className="p-5">
                     <ResponsiveContainer width="100%" height={280}>
-                      <BarChart data={providerComparison} layout="vertical" barSize={24}>
+                      <BarChart data={providerComparison} layout="vertical" barSize={32}>
                         <CartesianGrid strokeDasharray="3 3" stroke="#38383a" horizontal={false} />
                         <XAxis type="number" stroke="#6e6e73" fontSize={12} tickLine={false} axisLine={false} />
-                        <YAxis type="category" dataKey="name" stroke="#98989d" fontSize={13} width={120} tickLine={false} axisLine={false} />
+                        <YAxis type="category" dataKey="name" stroke="#98989d" fontSize={13} width={100} tickLine={false} axisLine={false} />
                         <Tooltip contentStyle={{ backgroundColor: '#2c2c2e', border: '1px solid #38383a', borderRadius: '8px' }} />
-                        {providerComparison.map((item, idx) => (
-                          <Bar
-                            key={item.name}
-                            dataKey="cost"
-                            fill={CHART_COLORS[idx % CHART_COLORS.length]}
-                            fillOpacity={0.5}
-                            radius={4}
-                            data={[item]}
-                          />
-                        ))}
+                        <Bar dataKey="cost" radius={4}>
+                          {providerComparison.map((entry, index) => (
+                            <cell key={`cell-${index}`} fill={CHART_COLORS[index % CHART_COLORS.length]} />
+                          ))}
+                        </Bar>
                       </BarChart>
                     </ResponsiveContainer>
                   </div>
@@ -692,21 +677,16 @@ export default function Dashboard() {
                   </div>
                   <div className="p-5">
                     <ResponsiveContainer width="100%" height={280}>
-                      <BarChart data={providerComparison} layout="vertical" barSize={24}>
+                      <BarChart data={providerComparison} layout="vertical" barSize={32}>
                         <CartesianGrid strokeDasharray="3 3" stroke="#38383a" horizontal={false} />
                         <XAxis type="number" stroke="#6e6e73" fontSize={12} tickLine={false} axisLine={false} />
-                        <YAxis type="category" dataKey="name" stroke="#98989d" fontSize={13} width={120} tickLine={false} axisLine={false} />
+                        <YAxis type="category" dataKey="name" stroke="#98989d" fontSize={13} width={100} tickLine={false} axisLine={false} />
                         <Tooltip contentStyle={{ backgroundColor: '#2c2c2e', border: '1px solid #38383a', borderRadius: '8px' }} />
-                        {providerComparison.map((item, idx) => (
-                          <Bar
-                            key={item.name}
-                            dataKey="tokens"
-                            fill={CHART_COLORS[idx % CHART_COLORS.length]}
-                            fillOpacity={0.5}
-                            radius={4}
-                            data={[item]}
-                          />
-                        ))}
+                        <Bar dataKey="tokens" radius={4}>
+                          {providerComparison.map((entry, index) => (
+                            <cell key={`cell-${index}`} fill={CHART_COLORS[index % CHART_COLORS.length]} />
+                          ))}
+                        </Bar>
                       </BarChart>
                     </ResponsiveContainer>
                   </div>
