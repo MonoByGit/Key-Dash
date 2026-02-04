@@ -471,7 +471,7 @@ export default function Dashboard() {
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-black">
-        <div className="animate-spin rounded-full h-12 w-12 border-2 border-[#38383a] border-t-[#98989d]"></div>
+        <div className="animate-spin rounded-full h-12 w-12 border-2 border-[#2c2c2e] border-t-[#98989d]"></div>
       </div>
     )
   }
@@ -479,27 +479,44 @@ export default function Dashboard() {
   return (
     <div className="min-h-screen bg-black text-[#f5f5f7]">
       {/* Header */}
-      <header className="border-b border-[#38383a] bg-[#2c2c2e]/90 backdrop-blur-xl sticky top-0 z-10">
+      <header className="border-b border-[#2c2c2e] bg-[#1c1c1e]/90 backdrop-blur-xl sticky top-0 z-10">
         <div className="max-w-7xl mx-auto px-4 py-3">
-          {/* Top row: Logo + Actions */}
-          <div className="flex items-center justify-between mb-3">
+          {/* Single row: Logo + Centered Tabs + Right Actions */}
+          <div className="flex items-center justify-between gap-4">
             {/* Logo - Left */}
-            <div className="flex items-center gap-2">
-              <div className="p-1.5 bg-[#48484a] rounded-lg">
+            <div className="flex items-center gap-2 flex-shrink-0">
+              <div className="p-1.5 bg-[#3a3a3c] rounded-lg">
                 <Activity className="w-5 h-5 text-[#98989d]" />
               </div>
               <h1 className="text-[15px] font-medium text-[#f5f5f7]">AI API Dashboard</h1>
             </div>
 
+            {/* Tabs - Centered */}
+            <div className="flex bg-[#2c2c2e] rounded-lg p-0.5 overflow-x-auto scrollbar-hide">
+              {['overview', 'keys', 'providers', 'archive'].map((tab) => (
+                <button
+                  key={tab}
+                  onClick={() => setActiveTab(tab as typeof activeTab)}
+                  className={`px-4 py-1.5 text-[13px] font-medium transition-all duration-200 rounded-md whitespace-nowrap ${
+                    activeTab === tab
+                      ? 'bg-[#3a3a3c] text-[#f5f5f7] shadow-sm'
+                      : 'text-[#98989d] hover:text-[#f5f5f7]'
+                  }`}
+                >
+                  {tab === 'overview' ? 'Overzicht' : tab === 'keys' ? 'Sleutels' : tab === 'providers' ? 'Aanbieders' : 'Archief'}
+                </button>
+              ))}
+            </div>
+
             {/* Right Actions */}
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-3 flex-shrink-0">
               {/* Mock Data Toggle */}
               <div className="flex items-center gap-1.5">
                 <span className={`text-xs hidden sm:inline ${useMockData ? 'text-[#98989d]' : 'text-[#6e6e73]'}`}>Data</span>
                 <button
                   onClick={() => setUseMockData(!useMockData)}
                   className={`relative inline-flex h-5 w-9 items-center rounded-full transition-colors ${
-                    useMockData ? 'bg-[#48484a]' : 'bg-[#3a3a3c]'
+                    useMockData ? 'bg-[#3a3a3c]' : 'bg-[#2c2c2e]'
                   }`}
                 >
                   <span
@@ -513,29 +530,12 @@ export default function Dashboard() {
               {/* Logout Button */}
               <button
                 onClick={handleLogout}
-                className="flex items-center gap-1 px-2 py-1.5 text-[#98989d] hover:text-[#f5f5f7] hover:bg-[#3a3a3c] rounded-lg transition-colors"
+                className="flex items-center gap-1 px-2 py-1.5 text-[#98989d] hover:text-[#f5f5f7] hover:bg-[#2c2c2e] rounded-lg transition-colors"
                 title="Uitloggen"
               >
                 <LogOut className="w-4 h-4" />
               </button>
             </div>
-          </div>
-
-          {/* Tabs - Scrollable on mobile */}
-          <div className="flex bg-[#3a3a3c] rounded-lg p-0.5 overflow-x-auto scrollbar-hide">
-            {['overview', 'keys', 'providers', 'archive'].map((tab) => (
-              <button
-                key={tab}
-                onClick={() => setActiveTab(tab as typeof activeTab)}
-                className={`px-4 py-1.5 text-[13px] font-medium transition-all duration-200 rounded-md whitespace-nowrap ${
-                  activeTab === tab
-                    ? 'bg-[#48484a] text-[#f5f5f7] shadow-sm'
-                    : 'text-[#98989d] hover:text-[#f5f5f7]'
-                }`}
-              >
-                {tab === 'overview' ? 'Overzicht' : tab === 'keys' ? 'Sleutels' : tab === 'providers' ? 'Aanbieders' : 'Archief'}
-              </button>
-            ))}
           </div>
         </div>
       </header>
@@ -545,7 +545,7 @@ export default function Dashboard() {
         {activeTab === 'overview' && (
           <>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3 mb-6">
-              <div className="bg-[#2c2c2e] border border-[#38383a] rounded-xl p-5">
+              <div className="bg-[#1c1c1e] border border-[#2c2c2e] rounded-xl p-5">
                 <div className="flex items-center justify-between mb-2">
                   <DollarSign className="w-5 h-5 text-[#8e8e93]" />
                 </div>
@@ -553,7 +553,7 @@ export default function Dashboard() {
                 <p className="text-[28px] font-semibold text-[#f5f5f7]">${totalCost.toFixed(2)}</p>
               </div>
 
-              <div className="bg-[#2c2c2e] border border-[#38383a] rounded-xl p-5">
+              <div className="bg-[#1c1c1e] border border-[#2c2c2e] rounded-xl p-5">
                 <div className="flex items-center justify-between mb-2">
                   <Activity className="w-5 h-5 text-[#8e8e93]" />
                 </div>
@@ -561,7 +561,7 @@ export default function Dashboard() {
                 <p className="text-[28px] font-semibold text-[#f5f5f7]">{totalTokens.toLocaleString()}</p>
               </div>
 
-              <div className="bg-[#2c2c2e] border border-[#38383a] rounded-xl p-5">
+              <div className="bg-[#1c1c1e] border border-[#2c2c2e] rounded-xl p-5">
                 <div className="flex items-center justify-between mb-2">
                   <Server className="w-5 h-5 text-[#8e8e93]" />
                 </div>
@@ -569,7 +569,7 @@ export default function Dashboard() {
                 <p className="text-[28px] font-semibold text-[#f5f5f7]">{totalRequests.toLocaleString()}</p>
               </div>
 
-              <div className="bg-[#2c2c2e] border border-[#38383a] rounded-xl p-5">
+              <div className="bg-[#1c1c1e] border border-[#2c2c2e] rounded-xl p-5">
                 <div className="flex items-center justify-between mb-2">
                   <Key className="w-5 h-5 text-[#8e8e93]" />
                 </div>
@@ -579,13 +579,13 @@ export default function Dashboard() {
             </div>
 
             {/* Usage Chart */}
-            <div className="bg-[#2c2c2e] border border-[#38383a] rounded-xl mb-6">
-              <div className="px-5 py-3 border-b border-[#38383a] flex items-center justify-between">
+            <div className="bg-[#1c1c1e] border border-[#2c2c2e] rounded-xl mb-6">
+              <div className="px-5 py-3 border-b border-[#2c2c2e] flex items-center justify-between">
                 <div className="flex items-center gap-2">
                   <BarChart3 className="w-5 h-5 text-[#8e8e93]" />
                   <h2 className="text-[13px] font-medium text-[#f5f5f7]">Verbruik</h2>
                 </div>
-                <div className="flex bg-[#3a3a3c] rounded-lg p-0.5">
+                <div className="flex bg-[#2c2c2e] rounded-lg p-0.5">
                   {[
                     { value: 'day', label: 'Dag' },
                     { value: 'week', label: 'Week' },
@@ -596,7 +596,7 @@ export default function Dashboard() {
                       onClick={() => setChartPeriod(period.value as typeof chartPeriod)}
                       className={`px-3 py-1 text-[12px] font-medium transition-all duration-200 rounded-md ${
                         chartPeriod === period.value
-                          ? 'bg-[#48484a] text-[#f5f5f7]'
+                          ? 'bg-[#3a3a3c] text-[#f5f5f7]'
                           : 'text-[#98989d] hover:text-[#f5f5f7]'
                       }`}
                     >
@@ -638,8 +638,8 @@ export default function Dashboard() {
 
             {/* Provider Comparison Charts */}
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-5 mb-6">
-                <div className="bg-[#2c2c2e] border border-[#38383a] rounded-xl">
-                  <div className="px-5 py-3 border-b border-[#38383a] flex items-center gap-2">
+                <div className="bg-[#1c1c1e] border border-[#2c2c2e] rounded-xl">
+                  <div className="px-5 py-3 border-b border-[#2c2c2e] flex items-center gap-2">
                     <DollarSign className="w-5 h-5 text-[#8e8e93]" />
                     <h2 className="text-[13px] font-medium text-[#f5f5f7]">Kosten per Provider</h2>
                   </div>
@@ -656,8 +656,8 @@ export default function Dashboard() {
                   </div>
                 </div>
 
-                <div className="bg-[#2c2c2e] border border-[#38383a] rounded-xl">
-                  <div className="px-5 py-3 border-b border-[#38383a] flex items-center gap-2">
+                <div className="bg-[#1c1c1e] border border-[#2c2c2e] rounded-xl">
+                  <div className="px-5 py-3 border-b border-[#2c2c2e] flex items-center gap-2">
                     <Activity className="w-5 h-5 text-[#8e8e93]" />
                     <h2 className="text-[13px] font-medium text-[#f5f5f7]">Tokens per Provider</h2>
                   </div>
@@ -676,12 +676,12 @@ export default function Dashboard() {
               </div>
 
             {/* Provider Overview */}
-            <div className="bg-[#2c2c2e] border border-[#38383a] rounded-xl mb-6">
-              <div className="px-5 py-3 border-b border-[#38383a] flex items-center justify-between">
+            <div className="bg-[#1c1c1e] border border-[#2c2c2e] rounded-xl mb-6">
+              <div className="px-5 py-3 border-b border-[#2c2c2e] flex items-center justify-between">
                 <h2 className="text-[13px] font-medium text-[#f5f5f7]">Aanbieders</h2>
                 <button
                   onClick={() => setShowAddProviderModal(true)}
-                  className="flex items-center gap-1 px-3 py-1.5 bg-[#48484a] hover:bg-[#555557] text-[#f5f5f7] text-[12px] font-medium rounded-md transition-colors"
+                  className="flex items-center gap-1 px-3 py-1.5 bg-[#3a3a3c] hover:bg-[#555557] text-[#f5f5f7] text-[12px] font-medium rounded-md transition-colors"
                 >
                   <Plus className="w-3.5 h-3.5" />
                   Toevoegen
@@ -696,9 +696,9 @@ export default function Dashboard() {
                   const hasKeys = providerKeys.length > 0
 
                   return (
-                    <div key={provider.id} className="bg-[#2c2c2e] p-4">
+                    <div key={provider.id} className="bg-[#1c1c1e] p-4">
                       <div className="flex items-center gap-3 mb-3">
-                        <div className="p-1.5 bg-[#3a3a3c] rounded-lg">
+                        <div className="p-1.5 bg-[#2c2c2e] rounded-lg">
                           {getProviderIcon(provider)}
                         </div>
                         <div>
@@ -723,7 +723,7 @@ export default function Dashboard() {
                             useNewKey({ name: '', label: '', key: '', providerId: provider.id })
                             setShowAddKeyModal(true)
                           }}
-                          className="w-full mt-1 py-2 px-3 bg-[#48484a] hover:bg-[#555557] text-[#f5f5f7] text-xs font-medium rounded-md transition-colors flex items-center justify-center gap-1"
+                          className="w-full mt-1 py-2 px-3 bg-[#3a3a3c] hover:bg-[#555557] text-[#f5f5f7] text-xs font-medium rounded-md transition-colors flex items-center justify-center gap-1"
                         >
                           <Plus className="w-3.5 h-3.5" />
                           Sleutel toevoegen
@@ -736,12 +736,12 @@ export default function Dashboard() {
             </div>
 
             {/* Recent Keys */}
-            <div className="bg-[#2c2c2e] border border-[#38383a] rounded-xl">
-              <div className="px-5 py-3 border-b border-[#38383a] flex items-center justify-between">
+            <div className="bg-[#1c1c1e] border border-[#2c2c2e] rounded-xl">
+              <div className="px-5 py-3 border-b border-[#2c2c2e] flex items-center justify-between">
                 <h2 className="text-[13px] font-medium text-[#f5f5f7]">Recente Sleutels</h2>
                 <button
                   onClick={() => setShowAddKeyModal(true)}
-                  className="flex items-center gap-1 px-3 py-1.5 bg-[#48484a] hover:bg-[#555557] text-[#f5f5f7] text-[12px] font-medium rounded-md transition-colors"
+                  className="flex items-center gap-1 px-3 py-1.5 bg-[#3a3a3c] hover:bg-[#555557] text-[#f5f5f7] text-[12px] font-medium rounded-md transition-colors"
                 >
                   <Plus className="w-3.5 h-3.5" />
                   Nieuwe Sleutel
@@ -751,7 +751,7 @@ export default function Dashboard() {
               <div className="overflow-x-auto">
                 <table className="w-full">
                   <thead>
-                    <tr className="text-left text-[11px] text-[#8e8e93] uppercase tracking-wide border-b border-[#38383a]">
+                    <tr className="text-left text-[11px] text-[#8e8e93] uppercase tracking-wide border-b border-[#2c2c2e]">
                       <th className="px-5 py-2.5 font-medium">Naam</th>
                       <th className="px-5 py-2.5 font-medium">Provider</th>
                       <th className="px-5 py-2.5 font-medium">Verzoeken</th>
@@ -763,7 +763,7 @@ export default function Dashboard() {
                   </thead>
                   <tbody>
                     {apiKeys.slice(0, 10).map((key) => (
-                      <tr key={key.id} className="border-b border-[#38383a]/50 hover:bg-[#3a3a3c]/30 transition-colors">
+                      <tr key={key.id} className="border-b border-[#2c2c2e]/50 hover:bg-[#2c2c2e]/30 transition-colors">
                         <td className="px-5 py-3">
                           <div>
                             <p className="text-[#f5f5f7]">{key.name}</p>
@@ -772,7 +772,7 @@ export default function Dashboard() {
                         </td>
                         <td className="px-5 py-3">
                           <div className="flex items-center gap-2">
-                            <div className="p-1 bg-[#3a3a3c] rounded">
+                            <div className="p-1 bg-[#2c2c2e] rounded">
                               {getProviderIcon(key.provider)}
                             </div>
                             <span className="text-[#f5f5f7]">{key.provider.displayName}</span>
@@ -784,7 +784,7 @@ export default function Dashboard() {
                         <td className="px-5 py-3">
                           <span
                             className={`px-2 py-0.5 text-[11px] font-medium rounded-full ${
-                              key.isActive ? 'bg-[#30d158]/15 text-[#30d158]' : 'bg-[#3a3a3c] text-[#98989d]'
+                              key.isActive ? 'bg-[#30d158]/15 text-[#30d158]' : 'bg-[#2c2c2e] text-[#98989d]'
                             }`}
                           >
                             {key.isActive ? 'Actief' : 'Inactief'}
@@ -794,7 +794,7 @@ export default function Dashboard() {
                           <div className="flex items-center gap-1">
                             <button
                               onClick={() => handleCopyKey(key.id, key.id)}
-                              className="p-1.5 hover:bg-[#3a3a3c] rounded transition-colors"
+                              className="p-1.5 hover:bg-[#2c2c2e] rounded transition-colors"
                               title="Kopieer"
                             >
                               {copiedKeyId === key.id ? (
@@ -842,7 +842,7 @@ export default function Dashboard() {
               <h2 className="text-[17px] font-medium text-[#f5f5f7]">API Sleutels</h2>
               <button
                 onClick={() => setShowAddKeyModal(true)}
-                className="flex items-center gap-2 px-4 py-1.5 bg-[#48484a] hover:bg-[#555557] text-[#f5f5f7] text-[13px] font-medium rounded-lg transition-colors"
+                className="flex items-center gap-2 px-4 py-1.5 bg-[#3a3a3c] hover:bg-[#555557] text-[#f5f5f7] text-[13px] font-medium rounded-lg transition-colors"
               >
                 <Plus className="w-4 h-4" />
                 Sleutel Toevoegen
@@ -855,13 +855,13 @@ export default function Dashboard() {
                 const isExpanded = expandedProviders.has(provider.id)
 
                 return (
-                  <div key={provider.id} className="bg-[#2c2c2e] border border-[#38383a] rounded-xl overflow-hidden">
+                  <div key={provider.id} className="bg-[#1c1c1e] border border-[#2c2c2e] rounded-xl overflow-hidden">
                     <button
                       onClick={() => toggleProvider(provider.id)}
-                      className="w-full px-5 py-3 flex items-center justify-between hover:bg-[#3a3a3c]/50 transition-colors"
+                      className="w-full px-5 py-3 flex items-center justify-between hover:bg-[#2c2c2e]/50 transition-colors"
                     >
                       <div className="flex items-center gap-3">
-                        <div className="p-1.5 bg-[#3a3a3c] rounded-lg">
+                        <div className="p-1.5 bg-[#2c2c2e] rounded-lg">
                           {getProviderIcon(provider)}
                         </div>
                         <div className="text-left">
@@ -882,7 +882,7 @@ export default function Dashboard() {
                     </button>
 
                     {isExpanded && (
-                      <div className="border-t border-[#38383a]">
+                      <div className="border-t border-[#2c2c2e]">
                         {providerKeys.length === 0 ? (
                           <div className="px-5 py-8 text-center text-[#8e8e93]">
                             Geen sleutels voor deze aanbieder
@@ -891,13 +891,13 @@ export default function Dashboard() {
                           providerKeys.map((key) => (
                             <div
                               key={key.id}
-                              className="px-5 py-3 border-b border-[#38383a] last:border-0 flex items-center justify-between hover:bg-[#3a3a3c]/30 transition-colors"
+                              className="px-5 py-3 border-b border-[#2c2c2e] last:border-0 flex items-center justify-between hover:bg-[#2c2c2e]/30 transition-colors"
                             >
                               <div className="flex-1">
                                 <div className="flex items-center gap-2">
                                   <span className="font-medium text-[#f5f5f7]">{key.name}</span>
                                   {key.label && (
-                                    <span className="px-2 py-0.5 bg-[#3a3a3c] text-xs text-[#98989d] rounded">
+                                    <span className="px-2 py-0.5 bg-[#2c2c2e] text-xs text-[#98989d] rounded">
                                       {key.label}
                                     </span>
                                   )}
@@ -914,14 +914,14 @@ export default function Dashboard() {
                                   className={`px-3 py-1 text-xs font-medium rounded-lg transition-colors ${
                                     key.isActive
                                       ? 'bg-[#30d158]/15 text-[#30d158] hover:bg-[#30d158]/20'
-                                      : 'bg-[#3a3a3c] text-[#98989d] hover:bg-[#48484a]'
+                                      : 'bg-[#2c2c2e] text-[#98989d] hover:bg-[#3a3a3c]'
                                   }`}
                                 >
                                   {key.isActive ? 'Actief' : 'Inactief'}
                                 </button>
                                 <button
                                   onClick={() => handleCopyKey(key.id, key.id)}
-                                  className="p-1.5 hover:bg-[#3a3a3c] rounded transition-colors"
+                                  className="p-1.5 hover:bg-[#2c2c2e] rounded transition-colors"
                                 >
                                   {copiedKeyId === key.id ? (
                                     <Check className="w-4 h-4 text-[#30d158]" />
@@ -962,7 +962,7 @@ export default function Dashboard() {
               <h2 className="text-[17px] font-medium text-[#f5f5f7]">Aanbieders</h2>
               <button
                 onClick={() => setShowAddProviderModal(true)}
-                className="flex items-center gap-2 px-4 py-1.5 bg-[#48484a] hover:bg-[#555557] text-[#f5f5f7] text-[13px] font-medium rounded-lg transition-colors"
+                className="flex items-center gap-2 px-4 py-1.5 bg-[#3a3a3c] hover:bg-[#555557] text-[#f5f5f7] text-[13px] font-medium rounded-lg transition-colors"
               >
                 <Plus className="w-4 h-4" />
                 Aanbieder Toevoegen
@@ -971,10 +971,10 @@ export default function Dashboard() {
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
               {providers.map((provider) => (
-                <div key={provider.id} className="bg-[#2c2c2e] border border-[#38383a] rounded-xl p-5">
+                <div key={provider.id} className="bg-[#1c1c1e] border border-[#2c2c2e] rounded-xl p-5">
                   <div className="flex items-start justify-between mb-4">
                     <div className="flex items-center gap-3">
-                      <div className="p-2 bg-[#3a3a3c] rounded-lg">
+                      <div className="p-2 bg-[#2c2c2e] rounded-lg">
                         {getProviderIcon(provider)}
                       </div>
                       <div>
@@ -1031,11 +1031,11 @@ export default function Dashboard() {
             </div>
 
             {archivedKeys.length === 0 ? (
-              <div className="bg-[#2c2c2e] border border-[#38383a] rounded-xl p-8 text-center">
+              <div className="bg-[#1c1c1e] border border-[#2c2c2e] rounded-xl p-8 text-center">
                 <p className="text-[#8e8e93]">Geen gearchiveerde sleutels</p>
               </div>
             ) : (
-              <div className="bg-[#2c2c2e] border border-[#38383a] rounded-xl overflow-hidden">
+              <div className="bg-[#1c1c1e] border border-[#2c2c2e] rounded-xl overflow-hidden">
                 <div className="overflow-x-auto">
                 <table className="w-full">
                   <thead className="bg-[#1a1a25]">
@@ -1050,10 +1050,10 @@ export default function Dashboard() {
                   </thead>
                   <tbody>
                     {archivedKeys.map((key) => (
-                      <tr key={key.id} className="border-b border-[#38383a]/50">
+                      <tr key={key.id} className="border-b border-[#2c2c2e]/50">
                         <td className="px-4 py-3">
                           <div className="flex items-center gap-2">
-                            <div className="p-1 bg-[#3a3a3c] rounded">
+                            <div className="p-1 bg-[#2c2c2e] rounded">
                               {getProviderIcon(key.provider)}
                             </div>
                             <div>
@@ -1071,7 +1071,7 @@ export default function Dashboard() {
                         <td className="px-4 py-3 text-right">
                           <button
                             onClick={() => handleRestore(key.id)}
-                            className="px-3 py-1 bg-[#48484a] hover:bg-[#555557] text-[#f5f5f7] text-xs font-medium rounded-lg transition-colors"
+                            className="px-3 py-1 bg-[#3a3a3c] hover:bg-[#555557] text-[#f5f5f7] text-xs font-medium rounded-lg transition-colors"
                           >
                             Herstellen
                           </button>
@@ -1090,8 +1090,8 @@ export default function Dashboard() {
       {/* Add Key Modal */}
       {showAddKeyModal && (
         <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50 p-4">
-          <div className="bg-[#2c2c2e] border border-[#38383a] w-full max-w-md rounded-xl">
-            <div className="px-5 py-3 border-b border-[#38383a]">
+          <div className="bg-[#1c1c1e] border border-[#2c2c2e] w-full max-w-md rounded-xl">
+            <div className="px-5 py-3 border-b border-[#2c2c2e]">
               <h2 className="text-[15px] font-medium text-[#f5f5f7]">Nieuwe API Key</h2>
             </div>
 
@@ -1102,7 +1102,7 @@ export default function Dashboard() {
                   type="text"
                   value={newKey.name}
                   onChange={(e) => useNewKey({ ...newKey, name: e.target.value })}
-                  className="w-full px-4 py-2 bg-[#3a3a3c] border border-[#48484a] text-[#f5f5f7] text-[14px] rounded-lg focus:outline-none focus:border-[#636366]"
+                  className="w-full px-4 py-2 bg-[#2c2c2e] border border-[#3a3a3c] text-[#f5f5f7] text-[14px] rounded-lg focus:outline-none focus:border-[#636366]"
                   placeholder="Bijv. Development Key"
                   required
                 />
@@ -1114,7 +1114,7 @@ export default function Dashboard() {
                   type="text"
                   value={newKey.label}
                   onChange={(e) => useNewKey({ ...newKey, label: e.target.value })}
-                  className="w-full px-4 py-2 bg-[#3a3a3c] border border-[#48484a] text-[#f5f5f7] text-[14px] rounded-lg focus:outline-none focus:border-[#636366]"
+                  className="w-full px-4 py-2 bg-[#2c2c2e] border border-[#3a3a3c] text-[#f5f5f7] text-[14px] rounded-lg focus:outline-none focus:border-[#636366]"
                   placeholder="Bijv. Project X"
                 />
               </div>
@@ -1125,7 +1125,7 @@ export default function Dashboard() {
                   <select
                     value={newKey.providerId}
                     onChange={(e) => useNewKey({ ...newKey, providerId: e.target.value })}
-                    className="w-full px-4 py-2 bg-[#3a3a3c] border border-[#48484a] text-[#f5f5f7] text-[14px] rounded-lg appearance-none focus:outline-none focus:border-[#636366]"
+                    className="w-full px-4 py-2 bg-[#2c2c2e] border border-[#3a3a3c] text-[#f5f5f7] text-[14px] rounded-lg appearance-none focus:outline-none focus:border-[#636366]"
                     required
                   >
                     <option value="">Selecteer...</option>
@@ -1143,15 +1143,15 @@ export default function Dashboard() {
                   type="password"
                   value={newKey.key}
                   onChange={(e) => useNewKey({ ...newKey, key: e.target.value })}
-                  className="w-full px-4 py-2 bg-[#3a3a3c] border border-[#48484a] text-[#f5f5f7] text-[14px] rounded-lg focus:outline-none focus:border-[#636366]"
+                  className="w-full px-4 py-2 bg-[#2c2c2e] border border-[#3a3a3c] text-[#f5f5f7] text-[14px] rounded-lg focus:outline-none focus:border-[#636366]"
                   placeholder="sk-..."
                   required
                 />
               </div>
 
               <div className="flex gap-3 pt-4">
-                <button type="button" onClick={() => setShowAddKeyModal(false)} className="flex-1 px-4 py-2 bg-[#3a3a3c] hover:bg-[#48484a] text-[#f5f5f7] text-[14px] font-medium rounded-lg transition-colors">Annuleren</button>
-                <button type="submit" className="flex-1 px-4 py-2 bg-[#48484a] hover:bg-[#555557] text-[#f5f5f7] text-[14px] font-medium rounded-lg transition-colors">Toevoegen</button>
+                <button type="button" onClick={() => setShowAddKeyModal(false)} className="flex-1 px-4 py-2 bg-[#2c2c2e] hover:bg-[#3a3a3c] text-[#f5f5f7] text-[14px] font-medium rounded-lg transition-colors">Annuleren</button>
+                <button type="submit" className="flex-1 px-4 py-2 bg-[#3a3a3c] hover:bg-[#555557] text-[#f5f5f7] text-[14px] font-medium rounded-lg transition-colors">Toevoegen</button>
               </div>
             </form>
           </div>
@@ -1161,51 +1161,54 @@ export default function Dashboard() {
       {/* Add Provider Modal */}
       {showAddProviderModal && (
         <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50 p-4">
-          <div className="bg-[#2c2c2e] border border-[#38383a] w-full max-w-md rounded-xl">
-            <div className="px-5 py-3 border-b border-[#38383a]">
+          <div className="bg-[#1c1c1e] border border-[#2c2c2e] w-full max-w-md rounded-xl">
+            <div className="px-5 py-3 border-b border-[#2c2c2e]">
               <h2 className="text-[15px] font-medium text-[#f5f5f7]">Aanbieder Toevoegen</h2>
             </div>
 
             <form onSubmit={handleAddProvider} className="p-5 space-y-4">
               <div>
                 <label className="block text-sm text-[#8e8e93] mb-2">Naam</label>
-                <input type="text" value={newProvider.name} onChange={(e) => useNewProvider({ ...newProvider, name: e.target.value })} className="w-full px-4 py-2 bg-[#3a3a3c] border border-[#48484a] text-[#f5f5f7] text-[14px] rounded-lg focus:outline-none focus:border-[#636366]" placeholder="Bijv. my_provider" required />
+                <input type="text" value={newProvider.name} onChange={(e) => useNewProvider({ ...newProvider, name: e.target.value })} className="w-full px-4 py-2 bg-[#2c2c2e] border border-[#3a3a3c] text-[#f5f5f7] text-[14px] rounded-lg focus:outline-none focus:border-[#636366]" placeholder="Bijv. my_provider" required />
               </div>
 
               <div>
                 <label className="block text-sm text-[#8e8e93] mb-2">Display Naam</label>
-                <input type="text" value={newProvider.displayName} onChange={(e) => useNewProvider({ ...newProvider, displayName: e.target.value })} className="w-full px-4 py-2 bg-[#3a3a3c] border border-[#48484a] text-[#f5f5f7] text-[14px] rounded-lg focus:outline-none focus:border-[#636366]" placeholder="Bijv. My Provider" required />
+                <input type="text" value={newProvider.displayName} onChange={(e) => useNewProvider({ ...newProvider, displayName: e.target.value })} className="w-full px-4 py-2 bg-[#2c2c2e] border border-[#3a3a3c] text-[#f5f5f7] text-[14px] rounded-lg focus:outline-none focus:border-[#636366]" placeholder="Bijv. My Provider" required />
               </div>
 
               <div>
                 <label className="block text-sm text-[#8e8e93] mb-2">API Endpoint</label>
-                <input type="url" value={newProvider.baseUrl} onChange={(e) => useNewProvider({ ...newProvider, baseUrl: e.target.value })} className="w-full px-4 py-2 bg-[#3a3a3c] border border-[#48484a] text-[#f5f5f7] text-[14px] rounded-lg focus:outline-none focus:border-[#636366]" placeholder="https://api.example.com" />
+                <input type="url" value={newProvider.baseUrl} onChange={(e) => useNewProvider({ ...newProvider, baseUrl: e.target.value })} className="w-full px-4 py-2 bg-[#2c2c2e] border border-[#3a3a3c] text-[#f5f5f7] text-[14px] rounded-lg focus:outline-none focus:border-[#636366]" placeholder="https://api.example.com" />
               </div>
 
               <div>
                 <label className="block text-sm text-[#8e8e93] mb-2">Auth Type</label>
-                <select value={newProvider.authType} onChange={(e) => useNewProvider({ ...newProvider, authType: e.target.value })} className="w-full px-4 py-2 bg-[#3a3a3c] border border-[#48484a] text-[#f5f5f7] text-[14px] rounded-lg focus:outline-none focus:border-[#636366]">
-                  <option value="bearer">Bearer Token</option>
-                  <option value="x-api-key">X-API-Key</option>
-                  <option value="basic">Basic Auth</option>
-                  <option value="custom">Custom</option>
-                </select>
+                <div className="relative">
+                  <select value={newProvider.authType} onChange={(e) => useNewProvider({ ...newProvider, authType: e.target.value })} className="w-full px-4 py-2 bg-[#2c2c2e] border border-[#3a3a3c] text-[#f5f5f7] text-[14px] rounded-lg appearance-none focus:outline-none focus:border-[#636366]">
+                    <option value="bearer">Bearer Token</option>
+                    <option value="x-api-key">X-API-Key</option>
+                    <option value="basic">Basic Auth</option>
+                    <option value="custom">Custom</option>
+                  </select>
+                  <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[#636366] pointer-events-none" />
+                </div>
               </div>
 
               <div className="grid grid-cols-2 gap-4">
                 <div>
                   <label className="block text-sm text-[#8e8e93] mb-2">Input ($/1M)</label>
-                  <input type="number" step="0.01" value={newProvider.inputPricing} onChange={(e) => useNewProvider({ ...newProvider, inputPricing: parseFloat(e.target.value) || 0 })} className="w-full px-4 py-2 bg-[#3a3a3c] border border-[#48484a] text-[#f5f5f7] text-[14px] rounded-lg focus:outline-none focus:border-[#636366]" />
+                  <input type="number" step="0.01" value={newProvider.inputPricing} onChange={(e) => useNewProvider({ ...newProvider, inputPricing: parseFloat(e.target.value) || 0 })} className="w-full px-4 py-2 bg-[#2c2c2e] border border-[#3a3a3c] text-[#f5f5f7] text-[14px] rounded-lg focus:outline-none focus:border-[#636366]" />
                 </div>
                 <div>
                   <label className="block text-sm text-[#8e8e93] mb-2">Output ($/1M)</label>
-                  <input type="number" step="0.01" value={newProvider.outputPricing} onChange={(e) => useNewProvider({ ...newProvider, outputPricing: parseFloat(e.target.value) || 0 })} className="w-full px-4 py-2 bg-[#3a3a3c] border border-[#48484a] text-[#f5f5f7] text-[14px] rounded-lg focus:outline-none focus:border-[#636366]" />
+                  <input type="number" step="0.01" value={newProvider.outputPricing} onChange={(e) => useNewProvider({ ...newProvider, outputPricing: parseFloat(e.target.value) || 0 })} className="w-full px-4 py-2 bg-[#2c2c2e] border border-[#3a3a3c] text-[#f5f5f7] text-[14px] rounded-lg focus:outline-none focus:border-[#636366]" />
                 </div>
               </div>
 
               <div className="flex gap-3 pt-4">
-                <button type="button" onClick={() => setShowAddProviderModal(false)} className="flex-1 px-4 py-2 bg-[#3a3a3c] hover:bg-[#48484a] text-[#f5f5f7] text-[14px] font-medium rounded-lg transition-colors">Annuleren</button>
-                <button type="submit" className="flex-1 px-4 py-2 bg-[#48484a] hover:bg-[#555557] text-[#f5f5f7] text-[14px] font-medium rounded-lg transition-colors">Toevoegen</button>
+                <button type="button" onClick={() => setShowAddProviderModal(false)} className="flex-1 px-4 py-2 bg-[#2c2c2e] hover:bg-[#3a3a3c] text-[#f5f5f7] text-[14px] font-medium rounded-lg transition-colors">Annuleren</button>
+                <button type="submit" className="flex-1 px-4 py-2 bg-[#3a3a3c] hover:bg-[#555557] text-[#f5f5f7] text-[14px] font-medium rounded-lg transition-colors">Toevoegen</button>
               </div>
             </form>
           </div>

@@ -40,20 +40,16 @@ export default function LoginPage() {
   return (
     <div className="min-h-screen bg-black text-[#f5f5f7] flex items-center justify-center p-4">
       <div className="w-full max-w-md">
-        {/* Header */}
-        <header className="border-b border-[#38383a] bg-[#2c2c2e]/90 backdrop-blur-xl sticky top-0 z-10 mb-8">
-          <div className="max-w-7xl mx-auto px-5 py-3">
-            <div className="flex items-center gap-3">
-              <div className="p-1.5 bg-[#48484a] rounded-lg">
-                <KeyRound className="w-5 h-5 text-[#98989d]" />
-              </div>
-              <h1 className="text-[17px] font-medium text-[#f5f5f7]">Key Dash</h1>
-            </div>
+        {/* Logo & Title */}
+        <div className="flex items-center justify-center gap-3 mb-8">
+          <div className="p-2 bg-[#1c1c1e] rounded-xl">
+            <KeyRound className="w-6 h-6 text-[#98989d]" />
           </div>
-        </header>
+          <h1 className="text-[20px] font-medium text-[#f5f5f7]">Key Dash</h1>
+        </div>
 
         {/* Login Form */}
-        <div className="bg-[#2c2c2e] border border-[#38383a] rounded-xl p-5">
+        <div className="bg-[#1c1c1e] border border-[#2c2c2e] rounded-xl p-5">
           <h2 className="text-[13px] font-medium text-[#f5f5f7] mb-4">Inloggen</h2>
 
           {error && (
@@ -71,7 +67,7 @@ export default function LoginPage() {
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="w-full bg-[#1a1a25] border border-[#38383a] rounded-lg py-2 px-3 text-[#f5f5f7] placeholder-[#636366] text-sm focus:outline-none focus:border-[#48484a] transition-colors"
+                className="w-full bg-[#1a1a25] border border-[#2c2c2e] rounded-lg py-2 px-3 text-[#f5f5f7] placeholder-[#636366] text-sm focus:outline-none focus:border-[#3a3a3c] transition-colors"
                 placeholder="jouw@email.com"
                 required
               />
@@ -85,7 +81,7 @@ export default function LoginPage() {
                 type="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="w-full bg-[#1a1a25] border border-[#38383a] rounded-lg py-2 px-3 text-[#f5f5f7] placeholder-[#636366] text-sm focus:outline-none focus:border-[#48484a] transition-colors"
+                className="w-full bg-[#1a1a25] border border-[#2c2c2e] rounded-lg py-2 px-3 text-[#f5f5f7] placeholder-[#636366] text-sm focus:outline-none focus:border-[#3a3a3c] transition-colors"
                 placeholder="••••••••"
                 required
               />
@@ -94,7 +90,7 @@ export default function LoginPage() {
             <button
               type="submit"
               disabled={loading}
-              className="w-full bg-[#48484a] hover:bg-[#555557] text-[#f5f5f7] text-xs font-medium py-2 rounded-lg transition-colors flex items-center justify-center gap-1.5"
+              className="w-full bg-[#3a3a3c] hover:bg-[#555557] text-[#f5f5f7] text-xs font-medium py-2 rounded-lg transition-colors flex items-center justify-center gap-1.5"
             >
               {loading ? (
                 <Loader2 className="w-4 h-4 animate-spin" />
