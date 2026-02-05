@@ -266,9 +266,10 @@ export default function Dashboard() {
       }
     }
 
-    // Real data - use actual costs per provider
+    // Real data - use provider.id as data key for consistent mapping
     const days = chartPeriod === 'day' ? 24 : chartPeriod === 'week' ? 7 : 30
     const data: Array<Record<string, number | string>> = []
+
     for (let i = days - 1; i >= 0; i--) {
       const date = new Date()
       date.setDate(date.getDate() - i)
@@ -279,10 +280,10 @@ export default function Dashboard() {
       providers.forEach((provider, idx) => {
         const providerKeys = apiKeys.filter((k) => k.providerId === provider.id)
         const providerCost = providerKeys.reduce((sum, k) => sum + k.cost, 0)
-        // Each provider shows their actual cost with realistic daily variation
+        // Use provider.id as the data key for consistent mapping
         const dailyBase = providerCost / 30
         const variation = Math.sin(dayIndex * 0.5 + idx * 0.8) * (dailyBase * 0.3)
-        providerData[provider.name] = Math.max(0, Number((dailyBase + variation).toFixed(2)))
+        providerData[provider.id] = Math.max(0, Number((dailyBase + variation).toFixed(2)))
       })
       data.push({ date: dateStr, ...providerData })
     }
@@ -291,12 +292,13 @@ export default function Dashboard() {
 
   const chartData = generateChartData()
 
-  // Provider comparison data
+  // Provider comparison data - each provider on their own row
   const providerComparison = providers.map((provider, idx) => {
     const providerKeys = apiKeys.filter((k) => k.providerId === provider.id)
     const cost = providerKeys.reduce((sum, k) => sum + k.cost, 0)
     const tokens = providerKeys.reduce((sum, k) => sum + k.inputTokens + k.outputTokens, 0)
     return {
+      id: provider.id,
       name: provider.displayName,
       cost: Math.round(cost),
       tokens: Math.round(tokens / 1000),
@@ -632,9 +634,10 @@ export default function Dashboard() {
                     <Legend />
                     {providers.map((provider, idx) => (
                       <Area
-                        key={provider.name}
+                        key={provider.id}
                         type="monotone"
-                        dataKey={provider.name}
+                        dataKey={provider.id}
+                        name={provider.displayName}
                         stroke={CHART_COLORS[idx % CHART_COLORS.length]}
                         fill={CHART_COLORS[idx % CHART_COLORS.length]}
                         fillOpacity={0.15}
@@ -658,16 +661,17 @@ export default function Dashboard() {
                       <BarChart data={providerComparison} layout="vertical" barSize={20}>
                         <CartesianGrid strokeDasharray="3 3" stroke="#38383a" horizontal={false} />
                         <XAxis type="number" stroke="#6e6e73" fontSize={12} tickLine={false} axisLine={false} />
-                        <YAxis type="category" dataKey="name" stroke="#98989d" fontSize={13} width={100} tickLine={false} axisLine={false} />
+                        <YAxis type="category" dataKey="id" stroke="#98989d" fontSize={13} width={100} tickLine={false} axisLine={false} tickFormatter={(val) => providerComparison.find(p => p.id === val)?.name || ''} />
                         <Tooltip contentStyle={{ backgroundColor: '#2c2c2e', border: '1px solid #38383a', borderRadius: '8px' }} />
                         {providerComparison.map((item, idx) => (
                           <Bar
-                            key={item.name}
+                            key={item.id}
                             dataKey="cost"
                             fill={CHART_COLORS[idx % CHART_COLORS.length]}
                             fillOpacity={0.8}
                             radius={4}
                             data={[item]}
+                            name={item.name}
                           />
                         ))}
                       </BarChart>
@@ -685,16 +689,17 @@ export default function Dashboard() {
                       <BarChart data={providerComparison} layout="vertical" barSize={20}>
                         <CartesianGrid strokeDasharray="3 3" stroke="#38383a" horizontal={false} />
                         <XAxis type="number" stroke="#6e6e73" fontSize={12} tickLine={false} axisLine={false} />
-                        <YAxis type="category" dataKey="name" stroke="#98989d" fontSize={13} width={100} tickLine={false} axisLine={false} />
+                        <YAxis type="category" dataKey="id" stroke="#98989d" fontSize={13} width={100} tickLine={false} axisLine={false} tickFormatter={(val) => providerComparison.find(p => p.id === val)?.name || ''} />
                         <Tooltip contentStyle={{ backgroundColor: '#2c2c2e', border: '1px solid #38383a', borderRadius: '8px' }} />
                         {providerComparison.map((item, idx) => (
                           <Bar
-                            key={item.name}
+                            key={item.id}
                             dataKey="tokens"
                             fill={CHART_COLORS[idx % CHART_COLORS.length]}
                             fillOpacity={0.8}
                             radius={4}
                             data={[item]}
+                            name={item.name}
                           />
                         ))}
                       </BarChart>
