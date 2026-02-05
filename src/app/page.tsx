@@ -148,7 +148,7 @@ export default function Dashboard() {
   const [apiKeys, setApiKeys] = useState<ApiKey[]>([])
   const [archivedKeys, setArchivedKeys] = useState<ApiKey[]>([])
   const [loading, setLoading] = useState(true)
-  const [activeTab, setActiveTab] = useState<'overview' | 'keys' | 'providers' | 'archive'>('overview')
+  const [activeTab, setActiveTab] = useState<'overview' | 'keys' | 'providers' | 'archive' | 'info'>('overview')
   const [showAddKeyModal, setShowAddKeyModal] = useState(false)
   const [showAddProviderModal, setShowAddProviderModal] = useState(false)
   const [copiedKeyId, setCopiedKeyId] = useState<string | null>(null)
@@ -505,7 +505,7 @@ export default function Dashboard() {
 
             {/* Tabs - Centered */}
             <div className="flex bg-[#2c2c2e] rounded-lg p-0.5 overflow-x-auto scrollbar-hide">
-              {['overview', 'keys', 'providers', 'archive'].map((tab) => (
+              {['overview', 'keys', 'providers', 'archive', 'info'].map((tab) => (
                 <button
                   key={tab}
                   onClick={() => setActiveTab(tab as typeof activeTab)}
@@ -515,7 +515,7 @@ export default function Dashboard() {
                       : 'text-[#98989d] hover:text-[#f5f5f7]'
                   }`}
                 >
-                  {tab === 'overview' ? 'Overzicht' : tab === 'keys' ? 'Sleutels' : tab === 'providers' ? 'Aanbieders' : 'Archief'}
+                  {tab === 'overview' ? 'Overzicht' : tab === 'keys' ? 'Sleutels' : tab === 'providers' ? 'Aanbieders' : tab === 'archive' ? 'Archief' : 'Info'}
                 </button>
               ))}
             </div>
@@ -1116,6 +1116,117 @@ export default function Dashboard() {
                 </div>
               </div>
             )}
+          </div>
+        )}
+
+        {/* Info Tab */}
+        {activeTab === 'info' && (
+          <div className="space-y-6">
+            <div className="flex items-center justify-between">
+              <div>
+                <h2 className="text-[17px] font-medium text-[#f5f5f7]">API Proxy & Tracking</h2>
+                <p className="text-sm text-[#8e8e93]">Gebruik de proxy om automatisch usage te tracken</p>
+              </div>
+            </div>
+
+            <div className="bg-[#1c1c1e] border border-[#2c2c2e] rounded-xl p-6">
+              <div className="flex items-center gap-3 mb-4">
+                <div className="p-2 bg-[#30d158]/10 rounded-lg">
+                  <Activity className="w-5 h-5 text-[#30d158]" />
+                </div>
+                <h3 className="text-[15px] font-medium text-[#f5f5f7]">Hoe werkt tracking?</h3>
+              </div>
+              <p className="text-sm text-[#98989d] mb-4">
+                Door je API requests via deze dashboard te sturen, wordt je verbruik automatisch bijgehouden.
+                Alle data wordt centraal opgeslagen en getoond in de overzichten.
+              </p>
+            </div>
+
+            <div className="bg-[#1c1c1e] border border-[#2c2c2e] rounded-xl overflow-hidden">
+              <div className="px-5 py-3 border-b border-[#2c2c2e] bg-[#1a1a25]">
+                <h3 className="text-[13px] font-medium text-[#f5f5f7]">Proxy Endpoints</h3>
+              </div>
+              <div className="overflow-x-auto">
+                <table className="w-full">
+                  <thead>
+                    <tr className="text-left text-xs text-[#8e8e93] uppercase tracking-wide border-b border-[#2c2c2e]">
+                      <th className="px-5 py-3 font-medium">Provider</th>
+                      <th className="px-5 py-3 font-medium">Endpoint</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {[
+                      { name: 'Anthropic', endpoint: '/api/proxy/anthropic/messages', model: 'model: "claude-3-5-sonnet-20241022"' },
+                      { name: 'OpenAI', endpoint: '/api/proxy/openai/chat/completions', model: 'model: "gpt-4o"' },
+                      { name: 'DeepSeek', endpoint: '/api/proxy/deepseek/chat/completions', model: 'model: "deepseek-chat"' },
+                      { name: 'MiniMax', endpoint: '/api/proxy/minimax/chat/completions', model: 'model: "minimax-2.1"' },
+                      { name: 'Google', endpoint: '/api/proxy/google/generateContent', model: 'model: "gemini-1.5-pro"' },
+                      { name: 'Azure', endpoint: '/api/proxy/azure/openai/deployments/{deployment}/chat/completions', model: 'model: "gpt-4o"' },
+                    ].map((provider) => (
+                      <tr key={provider.name} className="border-b border-[#2c2c2e]/50 last:border-0">
+                        <td className="px-5 py-3 text-[#f5f5f7]">{provider.name}</td>
+                        <td className="px-5 py-3">
+                          <code className="text-xs text-[#30d158] bg-[#1c1c1e] px-2 py-1 rounded">{provider.endpoint}</code>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            <div className="bg-[#1c1c1e] border border-[#2c2c2e] rounded-xl p-6">
+              <h3 className="text-[13px] font-medium text-[#f5f5f7] mb-4">Voorbeeld gebruik</h3>
+              <div className="space-y-3">
+                <p className="text-xs text-[#8e8e93]">Anthropic voorbeeld:</p>
+                <pre className="text-xs text-[#98989d] bg-[#0d0d0e] p-4 rounded-lg overflow-x-auto">
+{`fetch('https://key-dash-production.up.railway.app/api/proxy/anthropic/messages', {
+  method: 'POST',
+  headers: { 'Content-Type': 'application/json' },
+  body: JSON.stringify({
+    _keyId: "kopieer-dit-uit-sleutels-tab",
+    model: "claude-3-5-sonnet-20241022",
+    messages: [{ role: "user", content: "Hallo" }]
+  })
+})`}
+                </pre>
+              </div>
+              <div className="mt-4 p-4 bg-[#2c2c2e]/50 rounded-lg">
+                <p className="text-xs text-[#ff9f0a]">
+                  <span className="font-medium">Belangrijk:</span> Voeg altijd <code className="text-[#ff9f0a]">_keyId</code> toe aan de request body met je key ID.
+                </p>
+              </div>
+            </div>
+
+            <div className="bg-[#1c1c1e] border border-[#2c2c2e] rounded-xl p-6">
+              <div className="flex items-start gap-3">
+                <div className="p-1.5 bg-[#3a3a3c] rounded-lg mt-0.5">
+                  <span className="text-[#98989d] text-xs font-medium">1</span>
+                </div>
+                <div>
+                  <h4 className="text-[13px] font-medium text-[#f5f5f7]">Vind je Key ID</h4>
+                  <p className="text-xs text-[#98989d] mt-1">Ga naar het "Sleutels" tabblad en kopieer de key naam/ID.</p>
+                </div>
+              </div>
+              <div className="flex items-start gap-3 mt-4">
+                <div className="p-1.5 bg-[#3a3a3c] rounded-lg mt-0.5">
+                  <span className="text-[#98989d] text-xs font-medium">2</span>
+                </div>
+                <div>
+                  <h4 className="text-[13px] font-medium text-[#f5f5f7]">Update je apps</h4>
+                  <p className="text-xs text-[#98989d] mt-1">Verander de API endpoint in je apps naar de proxy URL hierboven.</p>
+                </div>
+              </div>
+              <div className="flex items-start gap-3 mt-4">
+                <div className="p-1.5 bg-[#3a3a3c] rounded-lg mt-0.5">
+                  <span className="text-[#98989d] text-xs font-medium">3</span>
+                </div>
+                <div>
+                  <h4 className="text-[13px] font-medium text-[#f5f5f7]">Bekijk je stats</h4>
+                  <p className="text-xs text-[#98989d] mt-1">Ga naar het Overzicht tabblad om je verbruik te zien.</p>
+                </div>
+              </div>
+            </div>
           </div>
         )}
       </main>
